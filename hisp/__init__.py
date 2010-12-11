@@ -1,4 +1,3 @@
-from itertools import chain
 from hisp.doctypes import HTML, XHTML, DJANGO
 from hisp.libraries.shortcuts import macros as shortcuts
 from hisp.exceptions import ConversionError
@@ -9,7 +8,7 @@ from hisp.libraries import load
 class Hisp:
     def __init__(self, filetype=None, debug=False, libraries=None):
         self.filetype = filetype
-        self.libraries = tuple(map(load, chain([shortcuts], libraries or ())))
+        self.libraries = tuple(map(load, libraries)) + (shortcuts,)
         self.parse = Parser(debug).parse
 
     def setf(self, filetype):
