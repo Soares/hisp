@@ -19,7 +19,7 @@ class Library(dict):
 
 class BoundMacro:
     def __init__(self, node, hisp, fn):
-        for proxy in ['join', 'separate', 'combine', 'indent', 'close', 'flag']:
+        for proxy in ['join', 'separate', 'chain', 'close', 'flag']:
             setattr(self, proxy, getattr(hisp, proxy))
 
         self.hisp, self.fn = hisp, fn
