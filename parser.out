@@ -1,0 +1,1567 @@
+Created by PLY version 3.3 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> expressions
+Rule 1     attribute -> OP_ATTR name text CP
+Rule 2     attributes -> attribute attribute
+Rule 3     attributes -> <empty>
+Rule 4     block -> OB_BLOCK NAME tagtext CB
+Rule 5     block -> OB_BLOCK NAME tagtext EXTEND tokens CB
+Rule 6     body -> attribute body
+Rule 7     body -> token body
+Rule 8     body -> <empty>
+Rule 9     cssattr -> CLASS
+Rule 10    cssattrs -> cssattr cssattrs
+Rule 11    cssattrs -> <empty>
+Rule 12    element -> OP_CLOSER tag attributes CP
+Rule 13    element -> OP tag body CP
+Rule 14    expression -> DOCTYPE
+Rule 15    expression -> COMMENT
+Rule 16    expression -> element
+Rule 17    expression -> block
+Rule 18    expression -> macro
+Rule 19    expression -> VARIABLE
+Rule 20    expression -> STRING
+Rule 21    expressions -> expression expressions
+Rule 22    expressions -> <empty>
+Rule 23    cssattr -> ID
+Rule 24    macro -> OP_MACRO NAME cssattrs body CP
+Rule 25    macro -> OP_MACRO NAME cssattrs body EXTEND body CP
+Rule 26    name -> NAME
+Rule 27    name -> block
+Rule 28    name -> VARIABLE
+Rule 29    tag -> name cssattrs
+Rule 30    tag -> cssattr cssattrs
+Rule 31    tagexpression -> macro
+Rule 32    tagexpression -> WORD
+Rule 33    tagexpression -> NAME
+Rule 34    tagexpression -> STRING
+Rule 35    tagtext -> tagexpression tagtext
+Rule 36    tagtext -> <empty>
+Rule 37    texpression -> COMMENT
+Rule 38    texpression -> block
+Rule 39    texpression -> macro
+Rule 40    texpression -> VARIABLE
+Rule 41    texpression -> STRING
+Rule 42    texpression -> WORD
+Rule 43    texpression -> NAME
+Rule 44    text -> texpression text
+Rule 45    text -> <empty>
+Rule 46    token -> NAME
+Rule 47    token -> WORD
+Rule 48    token -> expression
+Rule 49    tokens -> token tokens
+Rule 50    tokens -> <empty>
+
+Terminals, with rules where they appear
+
+CB                   : 4 5
+CLASS                : 9
+COMMENT              : 15 37
+CP                   : 1 12 13 24 25
+DOCTYPE              : 14
+EXTEND               : 5 25
+ID                   : 23
+NAME                 : 4 5 24 25 26 33 43 46
+OB_BLOCK             : 4 5
+OP                   : 13
+OP_ATTR              : 1
+OP_CLOSER            : 12
+OP_MACRO             : 24 25
+STRING               : 20 34 41
+VARIABLE             : 19 28 40
+WORD                 : 32 42 47
+error                : 
+
+Nonterminals, with rules where they appear
+
+attribute            : 2 2 6
+attributes           : 12
+block                : 17 27 38
+body                 : 6 7 13 24 25 25
+cssattr              : 10 30
+cssattrs             : 10 24 25 29 30
+element              : 16
+expression           : 21 48
+expressions          : 21 0
+macro                : 18 31 39
+name                 : 1 29
+tag                  : 12 13
+tagexpression        : 35
+tagtext              : 4 5 35
+texpression          : 44
+text                 : 1 44
+token                : 7 49
+tokens               : 5 49
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expressions
+    (21) expressions -> . expression expressions
+    (22) expressions -> .
+    (14) expression -> . DOCTYPE
+    (15) expression -> . COMMENT
+    (16) expression -> . element
+    (17) expression -> . block
+    (18) expression -> . macro
+    (19) expression -> . VARIABLE
+    (20) expression -> . STRING
+    (12) element -> . OP_CLOSER tag attributes CP
+    (13) element -> . OP tag body CP
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    $end            reduce using rule 22 (expressions -> .)
+    DOCTYPE         shift and go to state 1
+    COMMENT         shift and go to state 3
+    VARIABLE        shift and go to state 7
+    STRING          shift and go to state 4
+    OP_CLOSER       shift and go to state 5
+    OP              shift and go to state 13
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    macro                          shift and go to state 8
+    element                        shift and go to state 9
+    expressions                    shift and go to state 2
+    expression                     shift and go to state 11
+    block                          shift and go to state 12
+
+state 1
+
+    (14) expression -> DOCTYPE .
+
+    NAME            reduce using rule 14 (expression -> DOCTYPE .)
+    WORD            reduce using rule 14 (expression -> DOCTYPE .)
+    DOCTYPE         reduce using rule 14 (expression -> DOCTYPE .)
+    COMMENT         reduce using rule 14 (expression -> DOCTYPE .)
+    VARIABLE        reduce using rule 14 (expression -> DOCTYPE .)
+    STRING          reduce using rule 14 (expression -> DOCTYPE .)
+    OP_CLOSER       reduce using rule 14 (expression -> DOCTYPE .)
+    OP              reduce using rule 14 (expression -> DOCTYPE .)
+    OB_BLOCK        reduce using rule 14 (expression -> DOCTYPE .)
+    OP_MACRO        reduce using rule 14 (expression -> DOCTYPE .)
+    CB              reduce using rule 14 (expression -> DOCTYPE .)
+    OP_ATTR         reduce using rule 14 (expression -> DOCTYPE .)
+    CP              reduce using rule 14 (expression -> DOCTYPE .)
+    EXTEND          reduce using rule 14 (expression -> DOCTYPE .)
+    $end            reduce using rule 14 (expression -> DOCTYPE .)
+
+
+state 2
+
+    (0) S' -> expressions .
+
+
+
+state 3
+
+    (15) expression -> COMMENT .
+
+    NAME            reduce using rule 15 (expression -> COMMENT .)
+    WORD            reduce using rule 15 (expression -> COMMENT .)
+    DOCTYPE         reduce using rule 15 (expression -> COMMENT .)
+    COMMENT         reduce using rule 15 (expression -> COMMENT .)
+    VARIABLE        reduce using rule 15 (expression -> COMMENT .)
+    STRING          reduce using rule 15 (expression -> COMMENT .)
+    OP_CLOSER       reduce using rule 15 (expression -> COMMENT .)
+    OP              reduce using rule 15 (expression -> COMMENT .)
+    OB_BLOCK        reduce using rule 15 (expression -> COMMENT .)
+    OP_MACRO        reduce using rule 15 (expression -> COMMENT .)
+    CB              reduce using rule 15 (expression -> COMMENT .)
+    OP_ATTR         reduce using rule 15 (expression -> COMMENT .)
+    CP              reduce using rule 15 (expression -> COMMENT .)
+    EXTEND          reduce using rule 15 (expression -> COMMENT .)
+    $end            reduce using rule 15 (expression -> COMMENT .)
+
+
+state 4
+
+    (20) expression -> STRING .
+
+    NAME            reduce using rule 20 (expression -> STRING .)
+    WORD            reduce using rule 20 (expression -> STRING .)
+    DOCTYPE         reduce using rule 20 (expression -> STRING .)
+    COMMENT         reduce using rule 20 (expression -> STRING .)
+    VARIABLE        reduce using rule 20 (expression -> STRING .)
+    STRING          reduce using rule 20 (expression -> STRING .)
+    OP_CLOSER       reduce using rule 20 (expression -> STRING .)
+    OP              reduce using rule 20 (expression -> STRING .)
+    OB_BLOCK        reduce using rule 20 (expression -> STRING .)
+    OP_MACRO        reduce using rule 20 (expression -> STRING .)
+    CB              reduce using rule 20 (expression -> STRING .)
+    OP_ATTR         reduce using rule 20 (expression -> STRING .)
+    CP              reduce using rule 20 (expression -> STRING .)
+    EXTEND          reduce using rule 20 (expression -> STRING .)
+    $end            reduce using rule 20 (expression -> STRING .)
+
+
+state 5
+
+    (12) element -> OP_CLOSER . tag attributes CP
+    (29) tag -> . name cssattrs
+    (30) tag -> . cssattr cssattrs
+    (26) name -> . NAME
+    (27) name -> . block
+    (28) name -> . VARIABLE
+    (9) cssattr -> . CLASS
+    (23) cssattr -> . ID
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+
+    NAME            shift and go to state 21
+    VARIABLE        shift and go to state 18
+    CLASS           shift and go to state 19
+    ID              shift and go to state 15
+    OB_BLOCK        shift and go to state 10
+
+    name                           shift and go to state 14
+    tag                            shift and go to state 16
+    cssattr                        shift and go to state 17
+    block                          shift and go to state 20
+
+state 6
+
+    (24) macro -> OP_MACRO . NAME cssattrs body CP
+    (25) macro -> OP_MACRO . NAME cssattrs body EXTEND body CP
+
+    NAME            shift and go to state 22
+
+
+state 7
+
+    (19) expression -> VARIABLE .
+
+    NAME            reduce using rule 19 (expression -> VARIABLE .)
+    WORD            reduce using rule 19 (expression -> VARIABLE .)
+    DOCTYPE         reduce using rule 19 (expression -> VARIABLE .)
+    COMMENT         reduce using rule 19 (expression -> VARIABLE .)
+    VARIABLE        reduce using rule 19 (expression -> VARIABLE .)
+    STRING          reduce using rule 19 (expression -> VARIABLE .)
+    OP_CLOSER       reduce using rule 19 (expression -> VARIABLE .)
+    OP              reduce using rule 19 (expression -> VARIABLE .)
+    OB_BLOCK        reduce using rule 19 (expression -> VARIABLE .)
+    OP_MACRO        reduce using rule 19 (expression -> VARIABLE .)
+    CB              reduce using rule 19 (expression -> VARIABLE .)
+    OP_ATTR         reduce using rule 19 (expression -> VARIABLE .)
+    CP              reduce using rule 19 (expression -> VARIABLE .)
+    EXTEND          reduce using rule 19 (expression -> VARIABLE .)
+    $end            reduce using rule 19 (expression -> VARIABLE .)
+
+
+state 8
+
+    (18) expression -> macro .
+
+    NAME            reduce using rule 18 (expression -> macro .)
+    WORD            reduce using rule 18 (expression -> macro .)
+    DOCTYPE         reduce using rule 18 (expression -> macro .)
+    COMMENT         reduce using rule 18 (expression -> macro .)
+    VARIABLE        reduce using rule 18 (expression -> macro .)
+    STRING          reduce using rule 18 (expression -> macro .)
+    OP_CLOSER       reduce using rule 18 (expression -> macro .)
+    OP              reduce using rule 18 (expression -> macro .)
+    OB_BLOCK        reduce using rule 18 (expression -> macro .)
+    OP_MACRO        reduce using rule 18 (expression -> macro .)
+    CB              reduce using rule 18 (expression -> macro .)
+    OP_ATTR         reduce using rule 18 (expression -> macro .)
+    CP              reduce using rule 18 (expression -> macro .)
+    EXTEND          reduce using rule 18 (expression -> macro .)
+    $end            reduce using rule 18 (expression -> macro .)
+
+
+state 9
+
+    (16) expression -> element .
+
+    NAME            reduce using rule 16 (expression -> element .)
+    WORD            reduce using rule 16 (expression -> element .)
+    DOCTYPE         reduce using rule 16 (expression -> element .)
+    COMMENT         reduce using rule 16 (expression -> element .)
+    VARIABLE        reduce using rule 16 (expression -> element .)
+    STRING          reduce using rule 16 (expression -> element .)
+    OP_CLOSER       reduce using rule 16 (expression -> element .)
+    OP              reduce using rule 16 (expression -> element .)
+    OB_BLOCK        reduce using rule 16 (expression -> element .)
+    OP_MACRO        reduce using rule 16 (expression -> element .)
+    CB              reduce using rule 16 (expression -> element .)
+    OP_ATTR         reduce using rule 16 (expression -> element .)
+    CP              reduce using rule 16 (expression -> element .)
+    EXTEND          reduce using rule 16 (expression -> element .)
+    $end            reduce using rule 16 (expression -> element .)
+
+
+state 10
+
+    (4) block -> OB_BLOCK . NAME tagtext CB
+    (5) block -> OB_BLOCK . NAME tagtext EXTEND tokens CB
+
+    NAME            shift and go to state 23
+
+
+state 11
+
+    (21) expressions -> expression . expressions
+    (21) expressions -> . expression expressions
+    (22) expressions -> .
+    (14) expression -> . DOCTYPE
+    (15) expression -> . COMMENT
+    (16) expression -> . element
+    (17) expression -> . block
+    (18) expression -> . macro
+    (19) expression -> . VARIABLE
+    (20) expression -> . STRING
+    (12) element -> . OP_CLOSER tag attributes CP
+    (13) element -> . OP tag body CP
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    $end            reduce using rule 22 (expressions -> .)
+    DOCTYPE         shift and go to state 1
+    COMMENT         shift and go to state 3
+    VARIABLE        shift and go to state 7
+    STRING          shift and go to state 4
+    OP_CLOSER       shift and go to state 5
+    OP              shift and go to state 13
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    macro                          shift and go to state 8
+    element                        shift and go to state 9
+    expressions                    shift and go to state 24
+    expression                     shift and go to state 11
+    block                          shift and go to state 12
+
+state 12
+
+    (17) expression -> block .
+
+    NAME            reduce using rule 17 (expression -> block .)
+    WORD            reduce using rule 17 (expression -> block .)
+    DOCTYPE         reduce using rule 17 (expression -> block .)
+    COMMENT         reduce using rule 17 (expression -> block .)
+    VARIABLE        reduce using rule 17 (expression -> block .)
+    STRING          reduce using rule 17 (expression -> block .)
+    OP_CLOSER       reduce using rule 17 (expression -> block .)
+    OP              reduce using rule 17 (expression -> block .)
+    OB_BLOCK        reduce using rule 17 (expression -> block .)
+    OP_MACRO        reduce using rule 17 (expression -> block .)
+    CB              reduce using rule 17 (expression -> block .)
+    OP_ATTR         reduce using rule 17 (expression -> block .)
+    CP              reduce using rule 17 (expression -> block .)
+    EXTEND          reduce using rule 17 (expression -> block .)
+    $end            reduce using rule 17 (expression -> block .)
+
+
+state 13
+
+    (13) element -> OP . tag body CP
+    (29) tag -> . name cssattrs
+    (30) tag -> . cssattr cssattrs
+    (26) name -> . NAME
+    (27) name -> . block
+    (28) name -> . VARIABLE
+    (9) cssattr -> . CLASS
+    (23) cssattr -> . ID
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+
+    NAME            shift and go to state 21
+    VARIABLE        shift and go to state 18
+    CLASS           shift and go to state 19
+    ID              shift and go to state 15
+    OB_BLOCK        shift and go to state 10
+
+    name                           shift and go to state 14
+    tag                            shift and go to state 25
+    cssattr                        shift and go to state 17
+    block                          shift and go to state 20
+
+state 14
+
+    (29) tag -> name . cssattrs
+    (10) cssattrs -> . cssattr cssattrs
+    (11) cssattrs -> .
+    (9) cssattr -> . CLASS
+    (23) cssattr -> . ID
+
+    OP_ATTR         reduce using rule 11 (cssattrs -> .)
+    CP              reduce using rule 11 (cssattrs -> .)
+    NAME            reduce using rule 11 (cssattrs -> .)
+    WORD            reduce using rule 11 (cssattrs -> .)
+    DOCTYPE         reduce using rule 11 (cssattrs -> .)
+    COMMENT         reduce using rule 11 (cssattrs -> .)
+    VARIABLE        reduce using rule 11 (cssattrs -> .)
+    STRING          reduce using rule 11 (cssattrs -> .)
+    OP_CLOSER       reduce using rule 11 (cssattrs -> .)
+    OP              reduce using rule 11 (cssattrs -> .)
+    OB_BLOCK        reduce using rule 11 (cssattrs -> .)
+    OP_MACRO        reduce using rule 11 (cssattrs -> .)
+    CLASS           shift and go to state 19
+    ID              shift and go to state 15
+
+    cssattrs                       shift and go to state 26
+    cssattr                        shift and go to state 27
+
+state 15
+
+    (23) cssattr -> ID .
+
+    CLASS           reduce using rule 23 (cssattr -> ID .)
+    ID              reduce using rule 23 (cssattr -> ID .)
+    OP_ATTR         reduce using rule 23 (cssattr -> ID .)
+    CP              reduce using rule 23 (cssattr -> ID .)
+    NAME            reduce using rule 23 (cssattr -> ID .)
+    WORD            reduce using rule 23 (cssattr -> ID .)
+    DOCTYPE         reduce using rule 23 (cssattr -> ID .)
+    COMMENT         reduce using rule 23 (cssattr -> ID .)
+    VARIABLE        reduce using rule 23 (cssattr -> ID .)
+    STRING          reduce using rule 23 (cssattr -> ID .)
+    OP_CLOSER       reduce using rule 23 (cssattr -> ID .)
+    OP              reduce using rule 23 (cssattr -> ID .)
+    OB_BLOCK        reduce using rule 23 (cssattr -> ID .)
+    OP_MACRO        reduce using rule 23 (cssattr -> ID .)
+    EXTEND          reduce using rule 23 (cssattr -> ID .)
+
+
+state 16
+
+    (12) element -> OP_CLOSER tag . attributes CP
+    (2) attributes -> . attribute attribute
+    (3) attributes -> .
+    (1) attribute -> . OP_ATTR name text CP
+
+    CP              reduce using rule 3 (attributes -> .)
+    OP_ATTR         shift and go to state 29
+
+    attributes                     shift and go to state 30
+    attribute                      shift and go to state 28
+
+state 17
+
+    (30) tag -> cssattr . cssattrs
+    (10) cssattrs -> . cssattr cssattrs
+    (11) cssattrs -> .
+    (9) cssattr -> . CLASS
+    (23) cssattr -> . ID
+
+    OP_ATTR         reduce using rule 11 (cssattrs -> .)
+    CP              reduce using rule 11 (cssattrs -> .)
+    NAME            reduce using rule 11 (cssattrs -> .)
+    WORD            reduce using rule 11 (cssattrs -> .)
+    DOCTYPE         reduce using rule 11 (cssattrs -> .)
+    COMMENT         reduce using rule 11 (cssattrs -> .)
+    VARIABLE        reduce using rule 11 (cssattrs -> .)
+    STRING          reduce using rule 11 (cssattrs -> .)
+    OP_CLOSER       reduce using rule 11 (cssattrs -> .)
+    OP              reduce using rule 11 (cssattrs -> .)
+    OB_BLOCK        reduce using rule 11 (cssattrs -> .)
+    OP_MACRO        reduce using rule 11 (cssattrs -> .)
+    CLASS           shift and go to state 19
+    ID              shift and go to state 15
+
+    cssattrs                       shift and go to state 31
+    cssattr                        shift and go to state 27
+
+state 18
+
+    (28) name -> VARIABLE .
+
+    CLASS           reduce using rule 28 (name -> VARIABLE .)
+    ID              reduce using rule 28 (name -> VARIABLE .)
+    OP_ATTR         reduce using rule 28 (name -> VARIABLE .)
+    NAME            reduce using rule 28 (name -> VARIABLE .)
+    WORD            reduce using rule 28 (name -> VARIABLE .)
+    DOCTYPE         reduce using rule 28 (name -> VARIABLE .)
+    COMMENT         reduce using rule 28 (name -> VARIABLE .)
+    VARIABLE        reduce using rule 28 (name -> VARIABLE .)
+    STRING          reduce using rule 28 (name -> VARIABLE .)
+    OP_CLOSER       reduce using rule 28 (name -> VARIABLE .)
+    OP              reduce using rule 28 (name -> VARIABLE .)
+    OB_BLOCK        reduce using rule 28 (name -> VARIABLE .)
+    OP_MACRO        reduce using rule 28 (name -> VARIABLE .)
+    CP              reduce using rule 28 (name -> VARIABLE .)
+
+
+state 19
+
+    (9) cssattr -> CLASS .
+
+    CLASS           reduce using rule 9 (cssattr -> CLASS .)
+    ID              reduce using rule 9 (cssattr -> CLASS .)
+    OP_ATTR         reduce using rule 9 (cssattr -> CLASS .)
+    CP              reduce using rule 9 (cssattr -> CLASS .)
+    NAME            reduce using rule 9 (cssattr -> CLASS .)
+    WORD            reduce using rule 9 (cssattr -> CLASS .)
+    DOCTYPE         reduce using rule 9 (cssattr -> CLASS .)
+    COMMENT         reduce using rule 9 (cssattr -> CLASS .)
+    VARIABLE        reduce using rule 9 (cssattr -> CLASS .)
+    STRING          reduce using rule 9 (cssattr -> CLASS .)
+    OP_CLOSER       reduce using rule 9 (cssattr -> CLASS .)
+    OP              reduce using rule 9 (cssattr -> CLASS .)
+    OB_BLOCK        reduce using rule 9 (cssattr -> CLASS .)
+    OP_MACRO        reduce using rule 9 (cssattr -> CLASS .)
+    EXTEND          reduce using rule 9 (cssattr -> CLASS .)
+
+
+state 20
+
+    (27) name -> block .
+
+    CLASS           reduce using rule 27 (name -> block .)
+    ID              reduce using rule 27 (name -> block .)
+    OP_ATTR         reduce using rule 27 (name -> block .)
+    NAME            reduce using rule 27 (name -> block .)
+    WORD            reduce using rule 27 (name -> block .)
+    DOCTYPE         reduce using rule 27 (name -> block .)
+    COMMENT         reduce using rule 27 (name -> block .)
+    VARIABLE        reduce using rule 27 (name -> block .)
+    STRING          reduce using rule 27 (name -> block .)
+    OP_CLOSER       reduce using rule 27 (name -> block .)
+    OP              reduce using rule 27 (name -> block .)
+    OB_BLOCK        reduce using rule 27 (name -> block .)
+    OP_MACRO        reduce using rule 27 (name -> block .)
+    CP              reduce using rule 27 (name -> block .)
+
+
+state 21
+
+    (26) name -> NAME .
+
+    CLASS           reduce using rule 26 (name -> NAME .)
+    ID              reduce using rule 26 (name -> NAME .)
+    OP_ATTR         reduce using rule 26 (name -> NAME .)
+    NAME            reduce using rule 26 (name -> NAME .)
+    WORD            reduce using rule 26 (name -> NAME .)
+    DOCTYPE         reduce using rule 26 (name -> NAME .)
+    COMMENT         reduce using rule 26 (name -> NAME .)
+    VARIABLE        reduce using rule 26 (name -> NAME .)
+    STRING          reduce using rule 26 (name -> NAME .)
+    OP_CLOSER       reduce using rule 26 (name -> NAME .)
+    OP              reduce using rule 26 (name -> NAME .)
+    OB_BLOCK        reduce using rule 26 (name -> NAME .)
+    OP_MACRO        reduce using rule 26 (name -> NAME .)
+    CP              reduce using rule 26 (name -> NAME .)
+
+
+state 22
+
+    (24) macro -> OP_MACRO NAME . cssattrs body CP
+    (25) macro -> OP_MACRO NAME . cssattrs body EXTEND body CP
+    (10) cssattrs -> . cssattr cssattrs
+    (11) cssattrs -> .
+    (9) cssattr -> . CLASS
+    (23) cssattr -> . ID
+
+    OP_ATTR         reduce using rule 11 (cssattrs -> .)
+    NAME            reduce using rule 11 (cssattrs -> .)
+    WORD            reduce using rule 11 (cssattrs -> .)
+    DOCTYPE         reduce using rule 11 (cssattrs -> .)
+    COMMENT         reduce using rule 11 (cssattrs -> .)
+    VARIABLE        reduce using rule 11 (cssattrs -> .)
+    STRING          reduce using rule 11 (cssattrs -> .)
+    OP_CLOSER       reduce using rule 11 (cssattrs -> .)
+    OP              reduce using rule 11 (cssattrs -> .)
+    OB_BLOCK        reduce using rule 11 (cssattrs -> .)
+    OP_MACRO        reduce using rule 11 (cssattrs -> .)
+    CP              reduce using rule 11 (cssattrs -> .)
+    EXTEND          reduce using rule 11 (cssattrs -> .)
+    CLASS           shift and go to state 19
+    ID              shift and go to state 15
+
+    cssattrs                       shift and go to state 32
+    cssattr                        shift and go to state 27
+
+state 23
+
+    (4) block -> OB_BLOCK NAME . tagtext CB
+    (5) block -> OB_BLOCK NAME . tagtext EXTEND tokens CB
+    (35) tagtext -> . tagexpression tagtext
+    (36) tagtext -> .
+    (31) tagexpression -> . macro
+    (32) tagexpression -> . WORD
+    (33) tagexpression -> . NAME
+    (34) tagexpression -> . STRING
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CB              reduce using rule 36 (tagtext -> .)
+    EXTEND          reduce using rule 36 (tagtext -> .)
+    WORD            shift and go to state 33
+    NAME            shift and go to state 34
+    STRING          shift and go to state 38
+    OP_MACRO        shift and go to state 6
+
+    macro                          shift and go to state 36
+    tagexpression                  shift and go to state 35
+    tagtext                        shift and go to state 37
+
+state 24
+
+    (21) expressions -> expression expressions .
+
+    $end            reduce using rule 21 (expressions -> expression expressions .)
+
+
+state 25
+
+    (13) element -> OP tag . body CP
+    (6) body -> . attribute body
+    (7) body -> . token body
+    (8) body -> .
+    (1) attribute -> . OP_ATTR name text CP
+    (46) token -> . NAME
+    (47) token -> . WORD
+    (48) token -> . expression
+    (14) expression -> . DOCTYPE
+    (15) expression -> . COMMENT
+    (16) expression -> . element
+    (17) expression -> . block
+    (18) expression -> . macro
+    (19) expression -> . VARIABLE
+    (20) expression -> . STRING
+    (12) element -> . OP_CLOSER tag attributes CP
+    (13) element -> . OP tag body CP
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CP              reduce using rule 8 (body -> .)
+    OP_ATTR         shift and go to state 29
+    NAME            shift and go to state 42
+    WORD            shift and go to state 40
+    DOCTYPE         shift and go to state 1
+    COMMENT         shift and go to state 3
+    VARIABLE        shift and go to state 7
+    STRING          shift and go to state 4
+    OP_CLOSER       shift and go to state 5
+    OP              shift and go to state 13
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    body                           shift and go to state 41
+    macro                          shift and go to state 8
+    attribute                      shift and go to state 39
+    element                        shift and go to state 9
+    token                          shift and go to state 43
+    expression                     shift and go to state 44
+    block                          shift and go to state 12
+
+state 26
+
+    (29) tag -> name cssattrs .
+
+    OP_ATTR         reduce using rule 29 (tag -> name cssattrs .)
+    CP              reduce using rule 29 (tag -> name cssattrs .)
+    NAME            reduce using rule 29 (tag -> name cssattrs .)
+    WORD            reduce using rule 29 (tag -> name cssattrs .)
+    DOCTYPE         reduce using rule 29 (tag -> name cssattrs .)
+    COMMENT         reduce using rule 29 (tag -> name cssattrs .)
+    VARIABLE        reduce using rule 29 (tag -> name cssattrs .)
+    STRING          reduce using rule 29 (tag -> name cssattrs .)
+    OP_CLOSER       reduce using rule 29 (tag -> name cssattrs .)
+    OP              reduce using rule 29 (tag -> name cssattrs .)
+    OB_BLOCK        reduce using rule 29 (tag -> name cssattrs .)
+    OP_MACRO        reduce using rule 29 (tag -> name cssattrs .)
+
+
+state 27
+
+    (10) cssattrs -> cssattr . cssattrs
+    (10) cssattrs -> . cssattr cssattrs
+    (11) cssattrs -> .
+    (9) cssattr -> . CLASS
+    (23) cssattr -> . ID
+
+    OP_ATTR         reduce using rule 11 (cssattrs -> .)
+    CP              reduce using rule 11 (cssattrs -> .)
+    NAME            reduce using rule 11 (cssattrs -> .)
+    WORD            reduce using rule 11 (cssattrs -> .)
+    DOCTYPE         reduce using rule 11 (cssattrs -> .)
+    COMMENT         reduce using rule 11 (cssattrs -> .)
+    VARIABLE        reduce using rule 11 (cssattrs -> .)
+    STRING          reduce using rule 11 (cssattrs -> .)
+    OP_CLOSER       reduce using rule 11 (cssattrs -> .)
+    OP              reduce using rule 11 (cssattrs -> .)
+    OB_BLOCK        reduce using rule 11 (cssattrs -> .)
+    OP_MACRO        reduce using rule 11 (cssattrs -> .)
+    EXTEND          reduce using rule 11 (cssattrs -> .)
+    CLASS           shift and go to state 19
+    ID              shift and go to state 15
+
+    cssattrs                       shift and go to state 45
+    cssattr                        shift and go to state 27
+
+state 28
+
+    (2) attributes -> attribute . attribute
+    (1) attribute -> . OP_ATTR name text CP
+
+    OP_ATTR         shift and go to state 29
+
+    attribute                      shift and go to state 46
+
+state 29
+
+    (1) attribute -> OP_ATTR . name text CP
+    (26) name -> . NAME
+    (27) name -> . block
+    (28) name -> . VARIABLE
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+
+    NAME            shift and go to state 21
+    VARIABLE        shift and go to state 18
+    OB_BLOCK        shift and go to state 10
+
+    name                           shift and go to state 47
+    block                          shift and go to state 20
+
+state 30
+
+    (12) element -> OP_CLOSER tag attributes . CP
+
+    CP              shift and go to state 48
+
+
+state 31
+
+    (30) tag -> cssattr cssattrs .
+
+    OP_ATTR         reduce using rule 30 (tag -> cssattr cssattrs .)
+    CP              reduce using rule 30 (tag -> cssattr cssattrs .)
+    NAME            reduce using rule 30 (tag -> cssattr cssattrs .)
+    WORD            reduce using rule 30 (tag -> cssattr cssattrs .)
+    DOCTYPE         reduce using rule 30 (tag -> cssattr cssattrs .)
+    COMMENT         reduce using rule 30 (tag -> cssattr cssattrs .)
+    VARIABLE        reduce using rule 30 (tag -> cssattr cssattrs .)
+    STRING          reduce using rule 30 (tag -> cssattr cssattrs .)
+    OP_CLOSER       reduce using rule 30 (tag -> cssattr cssattrs .)
+    OP              reduce using rule 30 (tag -> cssattr cssattrs .)
+    OB_BLOCK        reduce using rule 30 (tag -> cssattr cssattrs .)
+    OP_MACRO        reduce using rule 30 (tag -> cssattr cssattrs .)
+
+
+state 32
+
+    (24) macro -> OP_MACRO NAME cssattrs . body CP
+    (25) macro -> OP_MACRO NAME cssattrs . body EXTEND body CP
+    (6) body -> . attribute body
+    (7) body -> . token body
+    (8) body -> .
+    (1) attribute -> . OP_ATTR name text CP
+    (46) token -> . NAME
+    (47) token -> . WORD
+    (48) token -> . expression
+    (14) expression -> . DOCTYPE
+    (15) expression -> . COMMENT
+    (16) expression -> . element
+    (17) expression -> . block
+    (18) expression -> . macro
+    (19) expression -> . VARIABLE
+    (20) expression -> . STRING
+    (12) element -> . OP_CLOSER tag attributes CP
+    (13) element -> . OP tag body CP
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CP              reduce using rule 8 (body -> .)
+    EXTEND          reduce using rule 8 (body -> .)
+    OP_ATTR         shift and go to state 29
+    NAME            shift and go to state 42
+    WORD            shift and go to state 40
+    DOCTYPE         shift and go to state 1
+    COMMENT         shift and go to state 3
+    VARIABLE        shift and go to state 7
+    STRING          shift and go to state 4
+    OP_CLOSER       shift and go to state 5
+    OP              shift and go to state 13
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    body                           shift and go to state 49
+    macro                          shift and go to state 8
+    attribute                      shift and go to state 39
+    element                        shift and go to state 9
+    token                          shift and go to state 43
+    expression                     shift and go to state 44
+    block                          shift and go to state 12
+
+state 33
+
+    (32) tagexpression -> WORD .
+
+    WORD            reduce using rule 32 (tagexpression -> WORD .)
+    NAME            reduce using rule 32 (tagexpression -> WORD .)
+    STRING          reduce using rule 32 (tagexpression -> WORD .)
+    OP_MACRO        reduce using rule 32 (tagexpression -> WORD .)
+    CB              reduce using rule 32 (tagexpression -> WORD .)
+    EXTEND          reduce using rule 32 (tagexpression -> WORD .)
+
+
+state 34
+
+    (33) tagexpression -> NAME .
+
+    WORD            reduce using rule 33 (tagexpression -> NAME .)
+    NAME            reduce using rule 33 (tagexpression -> NAME .)
+    STRING          reduce using rule 33 (tagexpression -> NAME .)
+    OP_MACRO        reduce using rule 33 (tagexpression -> NAME .)
+    CB              reduce using rule 33 (tagexpression -> NAME .)
+    EXTEND          reduce using rule 33 (tagexpression -> NAME .)
+
+
+state 35
+
+    (35) tagtext -> tagexpression . tagtext
+    (35) tagtext -> . tagexpression tagtext
+    (36) tagtext -> .
+    (31) tagexpression -> . macro
+    (32) tagexpression -> . WORD
+    (33) tagexpression -> . NAME
+    (34) tagexpression -> . STRING
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CB              reduce using rule 36 (tagtext -> .)
+    EXTEND          reduce using rule 36 (tagtext -> .)
+    WORD            shift and go to state 33
+    NAME            shift and go to state 34
+    STRING          shift and go to state 38
+    OP_MACRO        shift and go to state 6
+
+    macro                          shift and go to state 36
+    tagtext                        shift and go to state 50
+    tagexpression                  shift and go to state 35
+
+state 36
+
+    (31) tagexpression -> macro .
+
+    WORD            reduce using rule 31 (tagexpression -> macro .)
+    NAME            reduce using rule 31 (tagexpression -> macro .)
+    STRING          reduce using rule 31 (tagexpression -> macro .)
+    OP_MACRO        reduce using rule 31 (tagexpression -> macro .)
+    CB              reduce using rule 31 (tagexpression -> macro .)
+    EXTEND          reduce using rule 31 (tagexpression -> macro .)
+
+
+state 37
+
+    (4) block -> OB_BLOCK NAME tagtext . CB
+    (5) block -> OB_BLOCK NAME tagtext . EXTEND tokens CB
+
+    CB              shift and go to state 52
+    EXTEND          shift and go to state 51
+
+
+state 38
+
+    (34) tagexpression -> STRING .
+
+    WORD            reduce using rule 34 (tagexpression -> STRING .)
+    NAME            reduce using rule 34 (tagexpression -> STRING .)
+    STRING          reduce using rule 34 (tagexpression -> STRING .)
+    OP_MACRO        reduce using rule 34 (tagexpression -> STRING .)
+    CB              reduce using rule 34 (tagexpression -> STRING .)
+    EXTEND          reduce using rule 34 (tagexpression -> STRING .)
+
+
+state 39
+
+    (6) body -> attribute . body
+    (6) body -> . attribute body
+    (7) body -> . token body
+    (8) body -> .
+    (1) attribute -> . OP_ATTR name text CP
+    (46) token -> . NAME
+    (47) token -> . WORD
+    (48) token -> . expression
+    (14) expression -> . DOCTYPE
+    (15) expression -> . COMMENT
+    (16) expression -> . element
+    (17) expression -> . block
+    (18) expression -> . macro
+    (19) expression -> . VARIABLE
+    (20) expression -> . STRING
+    (12) element -> . OP_CLOSER tag attributes CP
+    (13) element -> . OP tag body CP
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CP              reduce using rule 8 (body -> .)
+    EXTEND          reduce using rule 8 (body -> .)
+    OP_ATTR         shift and go to state 29
+    NAME            shift and go to state 42
+    WORD            shift and go to state 40
+    DOCTYPE         shift and go to state 1
+    COMMENT         shift and go to state 3
+    VARIABLE        shift and go to state 7
+    STRING          shift and go to state 4
+    OP_CLOSER       shift and go to state 5
+    OP              shift and go to state 13
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    body                           shift and go to state 53
+    macro                          shift and go to state 8
+    attribute                      shift and go to state 39
+    element                        shift and go to state 9
+    token                          shift and go to state 43
+    expression                     shift and go to state 44
+    block                          shift and go to state 12
+
+state 40
+
+    (47) token -> WORD .
+
+    OP_ATTR         reduce using rule 47 (token -> WORD .)
+    NAME            reduce using rule 47 (token -> WORD .)
+    WORD            reduce using rule 47 (token -> WORD .)
+    DOCTYPE         reduce using rule 47 (token -> WORD .)
+    COMMENT         reduce using rule 47 (token -> WORD .)
+    VARIABLE        reduce using rule 47 (token -> WORD .)
+    STRING          reduce using rule 47 (token -> WORD .)
+    OP_CLOSER       reduce using rule 47 (token -> WORD .)
+    OP              reduce using rule 47 (token -> WORD .)
+    OB_BLOCK        reduce using rule 47 (token -> WORD .)
+    OP_MACRO        reduce using rule 47 (token -> WORD .)
+    CP              reduce using rule 47 (token -> WORD .)
+    EXTEND          reduce using rule 47 (token -> WORD .)
+    CB              reduce using rule 47 (token -> WORD .)
+
+
+state 41
+
+    (13) element -> OP tag body . CP
+
+    CP              shift and go to state 54
+
+
+state 42
+
+    (46) token -> NAME .
+
+    OP_ATTR         reduce using rule 46 (token -> NAME .)
+    NAME            reduce using rule 46 (token -> NAME .)
+    WORD            reduce using rule 46 (token -> NAME .)
+    DOCTYPE         reduce using rule 46 (token -> NAME .)
+    COMMENT         reduce using rule 46 (token -> NAME .)
+    VARIABLE        reduce using rule 46 (token -> NAME .)
+    STRING          reduce using rule 46 (token -> NAME .)
+    OP_CLOSER       reduce using rule 46 (token -> NAME .)
+    OP              reduce using rule 46 (token -> NAME .)
+    OB_BLOCK        reduce using rule 46 (token -> NAME .)
+    OP_MACRO        reduce using rule 46 (token -> NAME .)
+    CP              reduce using rule 46 (token -> NAME .)
+    EXTEND          reduce using rule 46 (token -> NAME .)
+    CB              reduce using rule 46 (token -> NAME .)
+
+
+state 43
+
+    (7) body -> token . body
+    (6) body -> . attribute body
+    (7) body -> . token body
+    (8) body -> .
+    (1) attribute -> . OP_ATTR name text CP
+    (46) token -> . NAME
+    (47) token -> . WORD
+    (48) token -> . expression
+    (14) expression -> . DOCTYPE
+    (15) expression -> . COMMENT
+    (16) expression -> . element
+    (17) expression -> . block
+    (18) expression -> . macro
+    (19) expression -> . VARIABLE
+    (20) expression -> . STRING
+    (12) element -> . OP_CLOSER tag attributes CP
+    (13) element -> . OP tag body CP
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CP              reduce using rule 8 (body -> .)
+    EXTEND          reduce using rule 8 (body -> .)
+    OP_ATTR         shift and go to state 29
+    NAME            shift and go to state 42
+    WORD            shift and go to state 40
+    DOCTYPE         shift and go to state 1
+    COMMENT         shift and go to state 3
+    VARIABLE        shift and go to state 7
+    STRING          shift and go to state 4
+    OP_CLOSER       shift and go to state 5
+    OP              shift and go to state 13
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    body                           shift and go to state 55
+    macro                          shift and go to state 8
+    attribute                      shift and go to state 39
+    element                        shift and go to state 9
+    token                          shift and go to state 43
+    expression                     shift and go to state 44
+    block                          shift and go to state 12
+
+state 44
+
+    (48) token -> expression .
+
+    OP_ATTR         reduce using rule 48 (token -> expression .)
+    NAME            reduce using rule 48 (token -> expression .)
+    WORD            reduce using rule 48 (token -> expression .)
+    DOCTYPE         reduce using rule 48 (token -> expression .)
+    COMMENT         reduce using rule 48 (token -> expression .)
+    VARIABLE        reduce using rule 48 (token -> expression .)
+    STRING          reduce using rule 48 (token -> expression .)
+    OP_CLOSER       reduce using rule 48 (token -> expression .)
+    OP              reduce using rule 48 (token -> expression .)
+    OB_BLOCK        reduce using rule 48 (token -> expression .)
+    OP_MACRO        reduce using rule 48 (token -> expression .)
+    CP              reduce using rule 48 (token -> expression .)
+    EXTEND          reduce using rule 48 (token -> expression .)
+    CB              reduce using rule 48 (token -> expression .)
+
+
+state 45
+
+    (10) cssattrs -> cssattr cssattrs .
+
+    OP_ATTR         reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    CP              reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    NAME            reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    WORD            reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    DOCTYPE         reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    COMMENT         reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    VARIABLE        reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    STRING          reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    OP_CLOSER       reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    OP              reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    OB_BLOCK        reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    OP_MACRO        reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+    EXTEND          reduce using rule 10 (cssattrs -> cssattr cssattrs .)
+
+
+state 46
+
+    (2) attributes -> attribute attribute .
+
+    CP              reduce using rule 2 (attributes -> attribute attribute .)
+
+
+state 47
+
+    (1) attribute -> OP_ATTR name . text CP
+    (44) text -> . texpression text
+    (45) text -> .
+    (37) texpression -> . COMMENT
+    (38) texpression -> . block
+    (39) texpression -> . macro
+    (40) texpression -> . VARIABLE
+    (41) texpression -> . STRING
+    (42) texpression -> . WORD
+    (43) texpression -> . NAME
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CP              reduce using rule 45 (text -> .)
+    COMMENT         shift and go to state 56
+    VARIABLE        shift and go to state 62
+    STRING          shift and go to state 64
+    WORD            shift and go to state 57
+    NAME            shift and go to state 58
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    text                           shift and go to state 59
+    texpression                    shift and go to state 60
+    macro                          shift and go to state 61
+    block                          shift and go to state 63
+
+state 48
+
+    (12) element -> OP_CLOSER tag attributes CP .
+
+    OP_ATTR         reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    NAME            reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    WORD            reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    DOCTYPE         reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    COMMENT         reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    VARIABLE        reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    STRING          reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    OP_CLOSER       reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    OP              reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    OB_BLOCK        reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    OP_MACRO        reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    CP              reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    EXTEND          reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    CB              reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+    $end            reduce using rule 12 (element -> OP_CLOSER tag attributes CP .)
+
+
+state 49
+
+    (24) macro -> OP_MACRO NAME cssattrs body . CP
+    (25) macro -> OP_MACRO NAME cssattrs body . EXTEND body CP
+
+    CP              shift and go to state 66
+    EXTEND          shift and go to state 65
+
+
+state 50
+
+    (35) tagtext -> tagexpression tagtext .
+
+    CB              reduce using rule 35 (tagtext -> tagexpression tagtext .)
+    EXTEND          reduce using rule 35 (tagtext -> tagexpression tagtext .)
+
+
+state 51
+
+    (5) block -> OB_BLOCK NAME tagtext EXTEND . tokens CB
+    (49) tokens -> . token tokens
+    (50) tokens -> .
+    (46) token -> . NAME
+    (47) token -> . WORD
+    (48) token -> . expression
+    (14) expression -> . DOCTYPE
+    (15) expression -> . COMMENT
+    (16) expression -> . element
+    (17) expression -> . block
+    (18) expression -> . macro
+    (19) expression -> . VARIABLE
+    (20) expression -> . STRING
+    (12) element -> . OP_CLOSER tag attributes CP
+    (13) element -> . OP tag body CP
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CB              reduce using rule 50 (tokens -> .)
+    NAME            shift and go to state 42
+    WORD            shift and go to state 40
+    DOCTYPE         shift and go to state 1
+    COMMENT         shift and go to state 3
+    VARIABLE        shift and go to state 7
+    STRING          shift and go to state 4
+    OP_CLOSER       shift and go to state 5
+    OP              shift and go to state 13
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    macro                          shift and go to state 8
+    element                        shift and go to state 9
+    tokens                         shift and go to state 67
+    token                          shift and go to state 68
+    expression                     shift and go to state 44
+    block                          shift and go to state 12
+
+state 52
+
+    (4) block -> OB_BLOCK NAME tagtext CB .
+
+    NAME            reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    WORD            reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    DOCTYPE         reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    COMMENT         reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    VARIABLE        reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    STRING          reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    OP_CLOSER       reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    OP              reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    OB_BLOCK        reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    OP_MACRO        reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    CB              reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    OP_ATTR         reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    CP              reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    EXTEND          reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    CLASS           reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    ID              reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+    $end            reduce using rule 4 (block -> OB_BLOCK NAME tagtext CB .)
+
+
+state 53
+
+    (6) body -> attribute body .
+
+    CP              reduce using rule 6 (body -> attribute body .)
+    EXTEND          reduce using rule 6 (body -> attribute body .)
+
+
+state 54
+
+    (13) element -> OP tag body CP .
+
+    OP_ATTR         reduce using rule 13 (element -> OP tag body CP .)
+    NAME            reduce using rule 13 (element -> OP tag body CP .)
+    WORD            reduce using rule 13 (element -> OP tag body CP .)
+    DOCTYPE         reduce using rule 13 (element -> OP tag body CP .)
+    COMMENT         reduce using rule 13 (element -> OP tag body CP .)
+    VARIABLE        reduce using rule 13 (element -> OP tag body CP .)
+    STRING          reduce using rule 13 (element -> OP tag body CP .)
+    OP_CLOSER       reduce using rule 13 (element -> OP tag body CP .)
+    OP              reduce using rule 13 (element -> OP tag body CP .)
+    OB_BLOCK        reduce using rule 13 (element -> OP tag body CP .)
+    OP_MACRO        reduce using rule 13 (element -> OP tag body CP .)
+    CP              reduce using rule 13 (element -> OP tag body CP .)
+    EXTEND          reduce using rule 13 (element -> OP tag body CP .)
+    CB              reduce using rule 13 (element -> OP tag body CP .)
+    $end            reduce using rule 13 (element -> OP tag body CP .)
+
+
+state 55
+
+    (7) body -> token body .
+
+    CP              reduce using rule 7 (body -> token body .)
+    EXTEND          reduce using rule 7 (body -> token body .)
+
+
+state 56
+
+    (37) texpression -> COMMENT .
+
+    COMMENT         reduce using rule 37 (texpression -> COMMENT .)
+    VARIABLE        reduce using rule 37 (texpression -> COMMENT .)
+    STRING          reduce using rule 37 (texpression -> COMMENT .)
+    WORD            reduce using rule 37 (texpression -> COMMENT .)
+    NAME            reduce using rule 37 (texpression -> COMMENT .)
+    OB_BLOCK        reduce using rule 37 (texpression -> COMMENT .)
+    OP_MACRO        reduce using rule 37 (texpression -> COMMENT .)
+    CP              reduce using rule 37 (texpression -> COMMENT .)
+
+
+state 57
+
+    (42) texpression -> WORD .
+
+    COMMENT         reduce using rule 42 (texpression -> WORD .)
+    VARIABLE        reduce using rule 42 (texpression -> WORD .)
+    STRING          reduce using rule 42 (texpression -> WORD .)
+    WORD            reduce using rule 42 (texpression -> WORD .)
+    NAME            reduce using rule 42 (texpression -> WORD .)
+    OB_BLOCK        reduce using rule 42 (texpression -> WORD .)
+    OP_MACRO        reduce using rule 42 (texpression -> WORD .)
+    CP              reduce using rule 42 (texpression -> WORD .)
+
+
+state 58
+
+    (43) texpression -> NAME .
+
+    COMMENT         reduce using rule 43 (texpression -> NAME .)
+    VARIABLE        reduce using rule 43 (texpression -> NAME .)
+    STRING          reduce using rule 43 (texpression -> NAME .)
+    WORD            reduce using rule 43 (texpression -> NAME .)
+    NAME            reduce using rule 43 (texpression -> NAME .)
+    OB_BLOCK        reduce using rule 43 (texpression -> NAME .)
+    OP_MACRO        reduce using rule 43 (texpression -> NAME .)
+    CP              reduce using rule 43 (texpression -> NAME .)
+
+
+state 59
+
+    (1) attribute -> OP_ATTR name text . CP
+
+    CP              shift and go to state 69
+
+
+state 60
+
+    (44) text -> texpression . text
+    (44) text -> . texpression text
+    (45) text -> .
+    (37) texpression -> . COMMENT
+    (38) texpression -> . block
+    (39) texpression -> . macro
+    (40) texpression -> . VARIABLE
+    (41) texpression -> . STRING
+    (42) texpression -> . WORD
+    (43) texpression -> . NAME
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CP              reduce using rule 45 (text -> .)
+    COMMENT         shift and go to state 56
+    VARIABLE        shift and go to state 62
+    STRING          shift and go to state 64
+    WORD            shift and go to state 57
+    NAME            shift and go to state 58
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    macro                          shift and go to state 61
+    texpression                    shift and go to state 60
+    text                           shift and go to state 70
+    block                          shift and go to state 63
+
+state 61
+
+    (39) texpression -> macro .
+
+    COMMENT         reduce using rule 39 (texpression -> macro .)
+    VARIABLE        reduce using rule 39 (texpression -> macro .)
+    STRING          reduce using rule 39 (texpression -> macro .)
+    WORD            reduce using rule 39 (texpression -> macro .)
+    NAME            reduce using rule 39 (texpression -> macro .)
+    OB_BLOCK        reduce using rule 39 (texpression -> macro .)
+    OP_MACRO        reduce using rule 39 (texpression -> macro .)
+    CP              reduce using rule 39 (texpression -> macro .)
+
+
+state 62
+
+    (40) texpression -> VARIABLE .
+
+    COMMENT         reduce using rule 40 (texpression -> VARIABLE .)
+    VARIABLE        reduce using rule 40 (texpression -> VARIABLE .)
+    STRING          reduce using rule 40 (texpression -> VARIABLE .)
+    WORD            reduce using rule 40 (texpression -> VARIABLE .)
+    NAME            reduce using rule 40 (texpression -> VARIABLE .)
+    OB_BLOCK        reduce using rule 40 (texpression -> VARIABLE .)
+    OP_MACRO        reduce using rule 40 (texpression -> VARIABLE .)
+    CP              reduce using rule 40 (texpression -> VARIABLE .)
+
+
+state 63
+
+    (38) texpression -> block .
+
+    COMMENT         reduce using rule 38 (texpression -> block .)
+    VARIABLE        reduce using rule 38 (texpression -> block .)
+    STRING          reduce using rule 38 (texpression -> block .)
+    WORD            reduce using rule 38 (texpression -> block .)
+    NAME            reduce using rule 38 (texpression -> block .)
+    OB_BLOCK        reduce using rule 38 (texpression -> block .)
+    OP_MACRO        reduce using rule 38 (texpression -> block .)
+    CP              reduce using rule 38 (texpression -> block .)
+
+
+state 64
+
+    (41) texpression -> STRING .
+
+    COMMENT         reduce using rule 41 (texpression -> STRING .)
+    VARIABLE        reduce using rule 41 (texpression -> STRING .)
+    STRING          reduce using rule 41 (texpression -> STRING .)
+    WORD            reduce using rule 41 (texpression -> STRING .)
+    NAME            reduce using rule 41 (texpression -> STRING .)
+    OB_BLOCK        reduce using rule 41 (texpression -> STRING .)
+    OP_MACRO        reduce using rule 41 (texpression -> STRING .)
+    CP              reduce using rule 41 (texpression -> STRING .)
+
+
+state 65
+
+    (25) macro -> OP_MACRO NAME cssattrs body EXTEND . body CP
+    (6) body -> . attribute body
+    (7) body -> . token body
+    (8) body -> .
+    (1) attribute -> . OP_ATTR name text CP
+    (46) token -> . NAME
+    (47) token -> . WORD
+    (48) token -> . expression
+    (14) expression -> . DOCTYPE
+    (15) expression -> . COMMENT
+    (16) expression -> . element
+    (17) expression -> . block
+    (18) expression -> . macro
+    (19) expression -> . VARIABLE
+    (20) expression -> . STRING
+    (12) element -> . OP_CLOSER tag attributes CP
+    (13) element -> . OP tag body CP
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CP              reduce using rule 8 (body -> .)
+    OP_ATTR         shift and go to state 29
+    NAME            shift and go to state 42
+    WORD            shift and go to state 40
+    DOCTYPE         shift and go to state 1
+    COMMENT         shift and go to state 3
+    VARIABLE        shift and go to state 7
+    STRING          shift and go to state 4
+    OP_CLOSER       shift and go to state 5
+    OP              shift and go to state 13
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    body                           shift and go to state 71
+    macro                          shift and go to state 8
+    attribute                      shift and go to state 39
+    element                        shift and go to state 9
+    token                          shift and go to state 43
+    expression                     shift and go to state 44
+    block                          shift and go to state 12
+
+state 66
+
+    (24) macro -> OP_MACRO NAME cssattrs body CP .
+
+    NAME            reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    WORD            reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    DOCTYPE         reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    COMMENT         reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    VARIABLE        reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    STRING          reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    OP_CLOSER       reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    OP              reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    OB_BLOCK        reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    OP_MACRO        reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    CB              reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    OP_ATTR         reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    CP              reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    EXTEND          reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+    $end            reduce using rule 24 (macro -> OP_MACRO NAME cssattrs body CP .)
+
+
+state 67
+
+    (5) block -> OB_BLOCK NAME tagtext EXTEND tokens . CB
+
+    CB              shift and go to state 72
+
+
+state 68
+
+    (49) tokens -> token . tokens
+    (49) tokens -> . token tokens
+    (50) tokens -> .
+    (46) token -> . NAME
+    (47) token -> . WORD
+    (48) token -> . expression
+    (14) expression -> . DOCTYPE
+    (15) expression -> . COMMENT
+    (16) expression -> . element
+    (17) expression -> . block
+    (18) expression -> . macro
+    (19) expression -> . VARIABLE
+    (20) expression -> . STRING
+    (12) element -> . OP_CLOSER tag attributes CP
+    (13) element -> . OP tag body CP
+    (4) block -> . OB_BLOCK NAME tagtext CB
+    (5) block -> . OB_BLOCK NAME tagtext EXTEND tokens CB
+    (24) macro -> . OP_MACRO NAME cssattrs body CP
+    (25) macro -> . OP_MACRO NAME cssattrs body EXTEND body CP
+
+    CB              reduce using rule 50 (tokens -> .)
+    NAME            shift and go to state 42
+    WORD            shift and go to state 40
+    DOCTYPE         shift and go to state 1
+    COMMENT         shift and go to state 3
+    VARIABLE        shift and go to state 7
+    STRING          shift and go to state 4
+    OP_CLOSER       shift and go to state 5
+    OP              shift and go to state 13
+    OB_BLOCK        shift and go to state 10
+    OP_MACRO        shift and go to state 6
+
+    macro                          shift and go to state 8
+    element                        shift and go to state 9
+    tokens                         shift and go to state 73
+    token                          shift and go to state 68
+    expression                     shift and go to state 44
+    block                          shift and go to state 12
+
+state 69
+
+    (1) attribute -> OP_ATTR name text CP .
+
+    OP_ATTR         reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    NAME            reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    WORD            reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    DOCTYPE         reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    COMMENT         reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    VARIABLE        reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    STRING          reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    OP_CLOSER       reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    OP              reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    OB_BLOCK        reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    OP_MACRO        reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    CP              reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+    EXTEND          reduce using rule 1 (attribute -> OP_ATTR name text CP .)
+
+
+state 70
+
+    (44) text -> texpression text .
+
+    CP              reduce using rule 44 (text -> texpression text .)
+
+
+state 71
+
+    (25) macro -> OP_MACRO NAME cssattrs body EXTEND body . CP
+
+    CP              shift and go to state 74
+
+
+state 72
+
+    (5) block -> OB_BLOCK NAME tagtext EXTEND tokens CB .
+
+    NAME            reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    WORD            reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    DOCTYPE         reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    COMMENT         reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    VARIABLE        reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    STRING          reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    OP_CLOSER       reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    OP              reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    OB_BLOCK        reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    OP_MACRO        reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    CB              reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    OP_ATTR         reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    CP              reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    EXTEND          reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    CLASS           reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    ID              reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+    $end            reduce using rule 5 (block -> OB_BLOCK NAME tagtext EXTEND tokens CB .)
+
+
+state 73
+
+    (49) tokens -> token tokens .
+
+    CB              reduce using rule 49 (tokens -> token tokens .)
+
+
+state 74
+
+    (25) macro -> OP_MACRO NAME cssattrs body EXTEND body CP .
+
+    NAME            reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    WORD            reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    DOCTYPE         reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    COMMENT         reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    VARIABLE        reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    STRING          reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    OP_CLOSER       reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    OP              reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    OB_BLOCK        reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    OP_MACRO        reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    CB              reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    OP_ATTR         reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    CP              reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    EXTEND          reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+    $end            reduce using rule 25 (macro -> OP_MACRO NAME cssattrs body EXTEND body CP .)
+

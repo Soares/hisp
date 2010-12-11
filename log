@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "hisp.py", line 58, in <module>
+    print Hisp().eval(output)
+  File "hisp.py", line 6, in __init__
+    from macros import library, django
+ImportError: cannot import name library

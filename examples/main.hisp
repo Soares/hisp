@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block body %
+    (#key
+        (button.upper.left#save (:title "Save Now"))
+        (button.upper.right#load (:title "Load"))
+        (button.lower.left#fullscreen (:title "Fullscreen"))
+        (button.lower.right#exit (:title "Exit"))
+        (.center
+            (button.left#undo (:title "Undo"))
+            (button.right#redo (:title "Redo")))
+        (button.bottom#hide (:title "Hide"))
+        (button.bottom#show (:title "Show")))
+
+    (#toolbar
+        (#selector
+            (button#select
+                (span.icon)
+                (.options
+                    (.buttonset
+                        (button#split "Split")
+                        (button#merge "Merge"))))
+            (button#wall
+                (span.icon)
+                (.options))
+            (button#window
+                (.options
+                    (#window-width.slider (:title "width"))
+                    (#window-height.slider (:title "height"))))
+            (button#door
+                (span.icon)
+                (.options
+                    (#door-width.slider (:title "width"))
+                    (#door-height.slider (:title "height"))))
+            (button#stair
+                (span.icon)
+                (.options
+                    (#stair-width.slider (:title "width"))
+                    (#stair-height.slider (:title "depth"))))
+            (button#stair
+                (span.icon)
+                (.options
+                    (#stair-width.slider (:title "width"))
+                    (#stair-height.slider (:title "depth"))))
+            (button#vent
+                (span.icon)
+                (.options
+                    (.buttonset
+                        (button#interior "Interior")
+                        (button#exterior "Exterior"))))))
+
+    (#optionbox
+        (#optionbox-one)
+        (#optionbox-two))
+
+    (#dashboard
+        (#bounds (#joystick))
+        (ul#layers
+            {% for layer in lower ~ (li.lower {layer.name})}
+            (li.active {active.name})
+            {% for layer in upper ~ (li.upper {layer.name})}))
+
+    (#layout (canvas#underlay))}
+
+{% load media %}
+{% block links % {block.super} ~
+    {% include_media "analyze.css" %}}
+{% block scripts % {block.super} ~
+    {% include_media "analyze.js" %}}
