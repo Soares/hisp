@@ -112,4 +112,6 @@ class Tokenizer:
         self.debug = debug
 
     def lexer(self):
-        return lex(module=self, optimize=not self.debug)
+        return lex(
+            module=self, optimize=not self.debug,
+            lextab='hisp.tables.lextab', outputdir='tables')

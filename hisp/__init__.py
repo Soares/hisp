@@ -1,14 +1,15 @@
+from itertools import chain
 from .doctypes import HTML, XHTML, DJANGO
 from .libraries.shortcuts import macros as shortcuts
 from .exceptions import ConversionError
 from .parse import Parser
+from .libraries import load
 
 
 class Hisp:
-    def __init__(self, filetype=None, debug=False,
-            libraries=(shortcuts,)):
+    def __init__(self, filetype=None, debug=False, libraries=None):
         self.filetype = filetype
-        self.libraries = libraries
+        self.libraries = tuple(map(load, chain([shortcuts], libraries or ())))
         self.parse = Parser(debug).parse
 
     def setf(self, filetype):
@@ -44,8 +45,9 @@ class Hisp:
         if isinstance(value, Node):
             return value.eval(self)
         try:
-            return self.combine(*map(self.eval, value))
-        except TypeError:
+            return self.join(map(self.eval, value))
+        except TypeError as e:
+            raise
             raise ConversionError("Can't evaluate unrecognized element '%s'" % value)
 
     def macro(self, name):

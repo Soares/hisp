@@ -153,7 +153,9 @@ def p_text(*parts):
 class Parser:
     def __init__(self, debug=False):
         self.debug = debug
-        self.parser = yacc.yacc(start='expressions', optimize=not debug)
+        self.parser = yacc.yacc(
+                start='expressions', optimize=not debug, debug=debug,
+                tabmodule='hisp.tables', outputdir='tables')
 
     def parse(self, data):
         lexer = Tokenizer(self.debug).lexer()

@@ -1,1 +1,4 @@
 *.pyc
+build/
+hisp/tables/parsetab.py
+hisp/tables/table.py

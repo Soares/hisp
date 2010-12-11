@@ -10,7 +10,7 @@ setup(
 	author_email='nate@natesoares.com',
 	# url='http://hisp.natesoares.com',
 	packages=[
-        'hisp', 'hisp.tables', 'hisp.libraries',
+        'hisp', 'hisp.libraries', 'hisp.tables',
         'hisp.loaders', 'hisp.management', 'hisp.management.commands',
     ],
 )

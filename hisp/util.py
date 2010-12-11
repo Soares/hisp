@@ -21,7 +21,9 @@ option_list = (
 
 
 def main():
-    parser = OptionParser(option_list=option_list)
+    parser = OptionParser(
+        'hisp filename.hisp [options]',
+        option_list=option_list)
     (options, args) = parser.parse_args()
     if len(args) != 1:
         parser.error('Please give a single file for converson.')
@@ -31,17 +33,17 @@ def main():
         'html': HTML,
         'xhtml': XHTML,
         'django': DJANGO,
-    }.get(options.pop('filetype'))
-    libraries = options.pop('libraries') or None
-    debug = options.pop('debug')
+    }.get(options.filetype)
+    libraries = options.libraries or None
+    debug = options.debug
     hisp = Hisp(filetype=filetype, debug=debug, libraries=libraries)
 
     with open(filename) as source:
         input = source.read()
     output = hisp.convert(input)
 
-    if options['outfile']:
-        with open(options['outfile'], 'w') as dest:
+    if options.outfile:
+        with open(options.outfile, 'w') as dest:
             dest.write(output)
     else:
         print output
