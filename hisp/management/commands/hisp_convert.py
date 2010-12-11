@@ -20,12 +20,12 @@ class Command(BaseCommand):
     """
 
     option_list = BaseCommand.option_list + (
-        make_option('--noapps',
-            type='store_false', dest='apps', default=True,
-            help="Prevents the conversion of hisp templates found in APP_DIRECTORIES"),
+        make_option('-a', '--apps',
+            type='store_true', dest='apps', default=False,
+            help='Converts hisp files found in APP_DIRECTORIES as well'),
         make_option('--nofs',
             type='store_false', dest='fs', default=True,
-            help="Prevents the conversion of hisp templates found in TEMPLATE_DIRS"),
+            help='Prevents the conversion of hisp templates found in TEMPLATE_DIRS'),
     )
 
     def handle(self, *args, **kwargs):

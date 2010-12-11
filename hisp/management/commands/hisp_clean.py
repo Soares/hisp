@@ -10,12 +10,12 @@ class Command(BaseCommand):
     help = """Clean all .hisp.html files from TEMPLATE_DIRS and APP_DIRECTORIES."""
 
     option_list = BaseCommand.option_list + (
-        make_option('--noapps',
-            type='store_false', dest='apps', default=True,
-            help="Prevents the conversion of hisp templates found in APP_DIRECTORIES"),
+        make_option('-a', '--apps',
+            type='store_true', dest='apps', default=False,
+            help='Clean the .hisp.html files in APP_DIRECTORIES as well'),
         make_option('--nofs',
             type='store_false', dest='fs', default=True,
-            help="Prevents the conversion of hisp templates found in TEMPLATE_DIRS"),
+            help='Prevent the cleaning of .hisp.html files in TEMPLATE_DIRS'),
     )
 
     def handle(self, *args, **kwargs):
