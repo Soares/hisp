@@ -14,9 +14,6 @@ option_list = (
     make_option('-l', '--link',
         action='append', dest='libraries',
         help='Macro libraries to link into hisp'),
-    make_option('-p', '--print',
-        action='store_true', dest='print', default=False,
-        help='Write the output to stdout'),
     make_option('-o',
         action='store', type='string', dest='outfile', default=False,
         help='The destination for output'),
@@ -43,12 +40,11 @@ def main():
         input = source.read()
     output = hisp.convert(input)
 
-    if options['print']:
-        print output
-
     if options['outfile']:
         with open(options['outfile'], 'w') as dest:
             dest.write(output)
+    else:
+        print output
 
 if __name__ == '__main__':
     main()
