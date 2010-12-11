@@ -1,0 +1,630 @@
+PLY: PARSE DEBUG START
+
+State  : 0
+Stack  : . LexToken(OP_MACRO,'(%',1,0)
+Action : Shift and goto state 6
+
+State  : 6
+Stack  : OP_MACRO . LexToken(NAME,'if',1,2)
+Action : Shift and goto state 23
+
+State  : 23
+Stack  : OP_MACRO NAME . LexToken(NAME,'ie',1,5)
+Action : Reduce rule [css_attrs -> <empty>] with [] and goto state 11
+Result : <Attributes @ 0xb75cd65c> ({})
+
+State  : 33
+Stack  : OP_MACRO NAME css_attrs . LexToken(NAME,'ie',1,5)
+Action : Shift and goto state 43
+
+State  : 43
+Stack  : OP_MACRO NAME css_attrs NAME . LexToken(NAME,'6',1,8)
+Action : Reduce rule [token -> NAME] with ['ie'] and goto state 42
+Result : <str @ 0xb75cff50> ('ie')
+
+State  : 45
+Stack  : OP_MACRO NAME css_attrs token . LexToken(NAME,'6',1,8)
+Action : Shift and goto state 43
+
+State  : 43
+Stack  : OP_MACRO NAME css_attrs token NAME . LexToken(EXTEND,'~',1,10)
+Action : Reduce rule [token -> NAME] with ['6'] and goto state 42
+Result : <str @ 0xb7696770> ('6')
+
+State  : 45
+Stack  : OP_MACRO NAME css_attrs token token . LexToken(EXTEND,'~',1,10)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74cdf0c> (Body{0}(0))
+
+State  : 57
+Stack  : OP_MACRO NAME css_attrs token token body . LexToken(EXTEND,'~',1,10)
+Action : Reduce rule [body -> token body] with ['6',Body{0}(0)] and goto state 7
+Result : <instance @ 0xb74cdf0c> (Body{0}(1))
+
+State  : 57
+Stack  : OP_MACRO NAME css_attrs token body . LexToken(EXTEND,'~',1,10)
+Action : Reduce rule [body -> token body] with ['ie',Body{0}(1)] and goto state 7
+Result : <instance @ 0xb74cdf0c> (Body{0}(2))
+
+State  : 51
+Stack  : OP_MACRO NAME css_attrs body . LexToken(EXTEND,'~',1,10)
+Action : Shift and goto state 62
+
+State  : 62
+Stack  : OP_MACRO NAME css_attrs body EXTEND . LexToken(OP,'(',1,12)
+Action : Shift and goto state 14
+
+State  : 14
+Stack  : OP_MACRO NAME css_attrs body EXTEND OP . LexToken(NAME,'abc',1,13)
+Action : Shift and goto state 22
+
+State  : 22
+Stack  : OP_MACRO NAME css_attrs body EXTEND OP NAME . LexToken(CP,')',1,16)
+Action : Reduce rule [name -> NAME] with ['abc'] and goto state 24
+Result : <str @ 0xb75cffb0> ('abc')
+
+State  : 15
+Stack  : OP_MACRO NAME css_attrs body EXTEND OP name . LexToken(CP,')',1,16)
+Action : Reduce rule [css_attrs -> <empty>] with [] and goto state 11
+Result : <Attributes @ 0xb75cd77c> ({})
+
+State  : 27
+Stack  : OP_MACRO NAME css_attrs body EXTEND OP name css_attrs . LexToken(CP,')',1,16)
+Action : Reduce rule [tag -> name css_attrs] with ['abc',{}] and goto state 30
+Result : <instance @ 0xb74cd4cc> (Tag(abc))
+
+State  : 26
+Stack  : OP_MACRO NAME css_attrs body EXTEND OP tag . LexToken(CP,')',1,16)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74ba90c> (Body{0}(0))
+
+State  : 41
+Stack  : OP_MACRO NAME css_attrs body EXTEND OP tag body . LexToken(CP,')',1,16)
+Action : Shift and goto state 56
+
+State  : 56
+Stack  : OP_MACRO NAME css_attrs body EXTEND OP tag body CP . LexToken(CP,')',1,17)
+Action : Reduce rule [element -> OP tag body CP] with ['(',Tag(abc),Body{0}(0),')'] and goto state 13
+Result : <instance @ 0xb74cdc8c> (Elem(abc))
+
+State  : 9
+Stack  : OP_MACRO NAME css_attrs body EXTEND element . LexToken(CP,')',1,17)
+Action : Reduce rule [expression -> element] with [Elem(abc)] and goto state 16
+Result : <instance @ 0xb74cdc8c> (Elem(abc))
+
+State  : 46
+Stack  : OP_MACRO NAME css_attrs body EXTEND expression . LexToken(CP,')',1,17)
+Action : Reduce rule [token -> expression] with [Elem(abc)] and goto state 45
+Result : <instance @ 0xb74cdc8c> (Elem(abc))
+
+State  : 45
+Stack  : OP_MACRO NAME css_attrs body EXTEND token . LexToken(CP,')',1,17)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74cdc0c> (Body{0}(0))
+
+State  : 57
+Stack  : OP_MACRO NAME css_attrs body EXTEND token body . LexToken(CP,')',1,17)
+Action : Reduce rule [body -> token body] with [Elem(abc),Body{0}(0)] and goto state 7
+Result : <instance @ 0xb74cdc0c> (Body{0}(1))
+
+State  : 68
+Stack  : OP_MACRO NAME css_attrs body EXTEND body . LexToken(CP,')',1,17)
+Action : Shift and goto state 71
+
+State  : 71
+Stack  : OP_MACRO NAME css_attrs body EXTEND body CP . LexToken(OP,'(',1,19)
+Action : Reduce rule [macro -> OP_MACRO NAME css_attrs body EXTEND body CP] with ['(%','if',{},Body{0}(2),'~',Body{0}(1),')'] and goto state 23
+Result : <instance @ 0xb74ba90c> (Macro(if))
+
+State  : 8
+Stack  : macro . LexToken(OP,'(',1,19)
+Action : Reduce rule [expression -> macro] with [Macro(if)] and goto state 17
+Result : <instance @ 0xb74ba90c> (Macro(if))
+
+State  : 11
+Stack  : expression . LexToken(OP,'(',1,19)
+Action : Shift and goto state 14
+
+State  : 14
+Stack  : expression OP . LexToken(NAME,'a',1,20)
+Action : Shift and goto state 22
+
+State  : 22
+Stack  : expression OP NAME . LexToken(OP_ATTR,'(:',1,22)
+Action : Reduce rule [name -> NAME] with ['a'] and goto state 24
+Result : <str @ 0xb76abdb8> ('a')
+
+State  : 15
+Stack  : expression OP name . LexToken(OP_ATTR,'(:',1,22)
+Action : Reduce rule [css_attrs -> <empty>] with [] and goto state 11
+Result : <Attributes @ 0xb75cd65c> ({})
+
+State  : 27
+Stack  : expression OP name css_attrs . LexToken(OP_ATTR,'(:',1,22)
+Action : Reduce rule [tag -> name css_attrs] with ['a',{}] and goto state 30
+Result : <instance @ 0xb74ba40c> (Tag(a))
+
+State  : 26
+Stack  : expression OP tag . LexToken(OP_ATTR,'(:',1,22)
+Action : Shift and goto state 30
+
+State  : 30
+Stack  : expression OP tag OP_ATTR . LexToken(NAME,'href',1,24)
+Action : Shift and goto state 22
+
+State  : 22
+Stack  : expression OP tag OP_ATTR NAME . LexToken(NAME,'http',1,29)
+Action : Reduce rule [name -> NAME] with ['href'] and goto state 24
+Result : <str @ 0xb74cdf40> ('href')
+
+State  : 49
+Stack  : expression OP tag OP_ATTR name . LexToken(NAME,'http',1,29)
+Action : Shift and goto state 35
+
+State  : 35
+Stack  : expression OP tag OP_ATTR name NAME . LexToken(SYMBOLS,'://google.com',1,33)
+Action : Reduce rule [tag_part -> NAME] with ['http'] and goto state 36
+Result : <str @ 0xb74cdd40> ('http')
+
+State  : 60
+Stack  : expression OP tag OP_ATTR name tag_part . LexToken(SYMBOLS,'://google.com',1,33)
+Action : Reduce rule [text_part -> tag_part] with ['http'] and goto state 38
+Result : <str @ 0xb74cdd40> ('http')
+
+State  : 59
+Stack  : expression OP tag OP_ATTR name text_part . LexToken(SYMBOLS,'://google.com',1,33)
+Action : Shift and goto state 34
+
+State  : 34
+Stack  : expression OP tag OP_ATTR name text_part SYMBOLS . LexToken(CP,')',1,46)
+Action : Reduce rule [tag_part -> SYMBOLS] with ['://google.com'] and goto state 35
+Result : <str @ 0xb74b8b10> ('://google.com')
+
+State  : 60
+Stack  : expression OP tag OP_ATTR name text_part tag_part . LexToken(CP,')',1,46)
+Action : Reduce rule [text_part -> tag_part] with ['://google.com'] and goto state 38
+Result : <str @ 0xb74b8b10> ('://google.com')
+
+State  : 59
+Stack  : expression OP tag OP_ATTR name text_part text_part . LexToken(CP,')',1,46)
+Action : Reduce rule [text -> <empty>] with [] and goto state 41
+Result : <instance @ 0xb74cdbec> (Text)
+
+State  : 67
+Stack  : expression OP tag OP_ATTR name text_part text_part text . LexToken(CP,')',1,46)
+Action : Reduce rule [text -> text_part text] with ['://google.com',Text] and goto state 40
+Result : <instance @ 0xb74cdbec> (Text)
+
+State  : 67
+Stack  : expression OP tag OP_ATTR name text_part text . LexToken(CP,')',1,46)
+Action : Reduce rule [text -> text_part text] with ['http',Text] and goto state 40
+Result : <instance @ 0xb74cdbec> (Text)
+
+State  : 58
+Stack  : expression OP tag OP_ATTR name text . LexToken(CP,')',1,46)
+Action : Shift and goto state 66
+
+State  : 66
+Stack  : expression OP tag OP_ATTR name text CP . LexToken(STRING,"test",1,48)
+Action : Reduce rule [attribute -> OP_ATTR name text CP] with ['(:','href',Text,')'] and goto state 1
+Result : <tuple @ 0xb74cd36c> (('href', Text))
+
+State  : 40
+Stack  : expression OP tag attribute . LexToken(STRING,"test",1,48)
+Action : Shift and goto state 42
+
+State  : 42
+Stack  : expression OP tag attribute STRING . LexToken(CP,')',1,54)
+Action : Reduce rule [token -> STRING] with ["test"] and goto state 44
+Result : <instance @ 0xb74cdc4c> ("test")
+
+State  : 45
+Stack  : expression OP tag attribute token . LexToken(CP,')',1,54)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74cdf0c> (Body{0}(0))
+
+State  : 57
+Stack  : expression OP tag attribute token body . LexToken(CP,')',1,54)
+Action : Reduce rule [body -> token body] with ["test",Body{0}(0)] and goto state 7
+Result : <instance @ 0xb74cdf0c> (Body{0}(1))
+
+State  : 55
+Stack  : expression OP tag attribute body . LexToken(CP,')',1,54)
+Action : Reduce rule [body -> attribute body] with [('href', Text),Body{0}(1)] and goto state 6
+Result : <instance @ 0xb74cdf0c> (Body{1}(1))
+
+State  : 41
+Stack  : expression OP tag body . LexToken(CP,')',1,54)
+Action : Shift and goto state 56
+
+State  : 56
+Stack  : expression OP tag body CP . LexToken(OP_MACRO,'(%',1,56)
+Action : Reduce rule [element -> OP tag body CP] with ['(',Tag(a),Body{1}(1),')'] and goto state 13
+Result : <instance @ 0xb74bac6c> (Elem(a))
+
+State  : 9
+Stack  : expression element . LexToken(OP_MACRO,'(%',1,56)
+Action : Reduce rule [expression -> element] with [Elem(a)] and goto state 16
+Result : <instance @ 0xb74bac6c> (Elem(a))
+
+State  : 11
+Stack  : expression expression . LexToken(OP_MACRO,'(%',1,56)
+Action : Shift and goto state 6
+
+State  : 6
+Stack  : expression expression OP_MACRO . LexToken(NAME,'goto',1,58)
+Action : Shift and goto state 23
+
+State  : 23
+Stack  : expression expression OP_MACRO NAME . LexToken(NAME,'object',1,63)
+Action : Reduce rule [css_attrs -> <empty>] with [] and goto state 11
+Result : <Attributes @ 0xb75cd65c> ({})
+
+State  : 33
+Stack  : expression expression OP_MACRO NAME css_attrs . LexToken(NAME,'object',1,63)
+Action : Shift and goto state 43
+
+State  : 43
+Stack  : expression expression OP_MACRO NAME css_attrs NAME . LexToken(EXTEND,'~',1,70)
+Action : Reduce rule [token -> NAME] with ['object'] and goto state 42
+Result : <str @ 0xb74cdf00> ('object')
+
+State  : 45
+Stack  : expression expression OP_MACRO NAME css_attrs token . LexToken(EXTEND,'~',1,70)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74cd58c> (Body{0}(0))
+
+State  : 57
+Stack  : expression expression OP_MACRO NAME css_attrs token body . LexToken(EXTEND,'~',1,70)
+Action : Reduce rule [body -> token body] with ['object',Body{0}(0)] and goto state 7
+Result : <instance @ 0xb74cd58c> (Body{0}(1))
+
+State  : 51
+Stack  : expression expression OP_MACRO NAME css_attrs body . LexToken(EXTEND,'~',1,70)
+Action : Shift and goto state 62
+
+State  : 62
+Stack  : expression expression OP_MACRO NAME css_attrs body EXTEND . LexToken(VARIABLE,Variable (object),1,72)
+Action : Shift and goto state 7
+
+State  : 7
+Stack  : expression expression OP_MACRO NAME css_attrs body EXTEND VARIABLE . LexToken(CP,')',1,80)
+Action : Reduce rule [django -> VARIABLE] with [<instance @ 0xb74cdeac>] and goto state 29
+Result : <instance @ 0xb74cdeac> (Variable (object))
+
+State  : 3
+Stack  : expression expression OP_MACRO NAME css_attrs body EXTEND django . LexToken(CP,')',1,80)
+Action : Reduce rule [expression -> django] with [<instance @ 0xb74cdeac>] and goto state 18
+Result : <instance @ 0xb74cdeac> (Variable (object))
+
+State  : 46
+Stack  : expression expression OP_MACRO NAME css_attrs body EXTEND expression . LexToken(CP,')',1,80)
+Action : Reduce rule [token -> expression] with [<instance @ 0xb74cdeac>] and goto state 45
+Result : <instance @ 0xb74cdeac> (Variable (object))
+
+State  : 45
+Stack  : expression expression OP_MACRO NAME css_attrs body EXTEND token . LexToken(CP,')',1,80)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74cd44c> (Body{0}(0))
+
+State  : 57
+Stack  : expression expression OP_MACRO NAME css_attrs body EXTEND token body . LexToken(CP,')',1,80)
+Action : Reduce rule [body -> token body] with [<instance @ 0xb74cdeac>,Body{0}(0)] and goto state 7
+Result : <instance @ 0xb74cd44c> (Body{0}(1))
+
+State  : 68
+Stack  : expression expression OP_MACRO NAME css_attrs body EXTEND body . LexToken(CP,')',1,80)
+Action : Shift and goto state 71
+
+State  : 71
+Stack  : expression expression OP_MACRO NAME css_attrs body EXTEND body CP . LexToken(OP_MACRO,'(%',1,82)
+Action : Reduce rule [macro -> OP_MACRO NAME css_attrs body EXTEND body CP] with ['(%','goto',{},Body{0}(1),'~',Body{0}(1),')'] and goto state 23
+Result : <instance @ 0xb74cd92c> (Macro(goto))
+
+State  : 8
+Stack  : expression expression macro . LexToken(OP_MACRO,'(%',1,82)
+Action : Reduce rule [expression -> macro] with [Macro(goto)] and goto state 17
+Result : <instance @ 0xb74cd92c> (Macro(goto))
+
+State  : 11
+Stack  : expression expression expression . LexToken(OP_MACRO,'(%',1,82)
+Action : Shift and goto state 6
+
+State  : 6
+Stack  : expression expression expression OP_MACRO . LexToken(NAME,'internal',1,84)
+Action : Shift and goto state 23
+
+State  : 23
+Stack  : expression expression expression OP_MACRO NAME . LexToken(OP_ATTR,'(:',1,93)
+Action : Reduce rule [css_attrs -> <empty>] with [] and goto state 11
+Result : <Attributes @ 0xb75cd65c> ({})
+
+State  : 33
+Stack  : expression expression expression OP_MACRO NAME css_attrs . LexToken(OP_ATTR,'(:',1,93)
+Action : Shift and goto state 30
+
+State  : 30
+Stack  : expression expression expression OP_MACRO NAME css_attrs OP_ATTR . LexToken(NAME,'url',1,95)
+Action : Shift and goto state 22
+
+State  : 22
+Stack  : expression expression expression OP_MACRO NAME css_attrs OP_ATTR NAME . LexToken(NAME,'test',1,99)
+Action : Reduce rule [name -> NAME] with ['url'] and goto state 24
+Result : <str @ 0xb75cff08> ('url')
+
+State  : 49
+Stack  : expression expression expression OP_MACRO NAME css_attrs OP_ATTR name . LexToken(NAME,'test',1,99)
+Action : Shift and goto state 35
+
+State  : 35
+Stack  : expression expression expression OP_MACRO NAME css_attrs OP_ATTR name NAME . LexToken(CP,')',1,103)
+Action : Reduce rule [tag_part -> NAME] with ['test'] and goto state 36
+Result : <str @ 0xb74cd440> ('test')
+
+State  : 60
+Stack  : expression expression expression OP_MACRO NAME css_attrs OP_ATTR name tag_part . LexToken(CP,')',1,103)
+Action : Reduce rule [text_part -> tag_part] with ['test'] and goto state 38
+Result : <str @ 0xb74cd440> ('test')
+
+State  : 59
+Stack  : expression expression expression OP_MACRO NAME css_attrs OP_ATTR name text_part . LexToken(CP,')',1,103)
+Action : Reduce rule [text -> <empty>] with [] and goto state 41
+Result : <instance @ 0xb74cd30c> (Text)
+
+State  : 67
+Stack  : expression expression expression OP_MACRO NAME css_attrs OP_ATTR name text_part text . LexToken(CP,')',1,103)
+Action : Reduce rule [text -> text_part text] with ['test',Text] and goto state 40
+Result : <instance @ 0xb74cd30c> (Text)
+
+State  : 58
+Stack  : expression expression expression OP_MACRO NAME css_attrs OP_ATTR name text . LexToken(CP,')',1,103)
+Action : Shift and goto state 66
+
+State  : 66
+Stack  : expression expression expression OP_MACRO NAME css_attrs OP_ATTR name text CP . LexToken(OP,'(',1,116)
+Action : Reduce rule [attribute -> OP_ATTR name text CP] with ['(:','url',Text,')'] and goto state 1
+Result : <tuple @ 0xb74cd36c> (('url', Text))
+
+State  : 40
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute . LexToken(OP,'(',1,116)
+Action : Shift and goto state 14
+
+State  : 14
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute OP . LexToken(NAME,'abc',1,117)
+Action : Shift and goto state 22
+
+State  : 22
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute OP NAME . LexToken(CP,')',1,120)
+Action : Reduce rule [name -> NAME] with ['abc'] and goto state 24
+Result : <str @ 0xb75cffe0> ('abc')
+
+State  : 15
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute OP name . LexToken(CP,')',1,120)
+Action : Reduce rule [css_attrs -> <empty>] with [] and goto state 11
+Result : <Attributes @ 0xb75cd9bc> ({})
+
+State  : 27
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute OP name css_attrs . LexToken(CP,')',1,120)
+Action : Reduce rule [tag -> name css_attrs] with ['abc',{}] and goto state 30
+Result : <instance @ 0xb74cd3cc> (Tag(abc))
+
+State  : 26
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute OP tag . LexToken(CP,')',1,120)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74cd58c> (Body{0}(0))
+
+State  : 41
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute OP tag body . LexToken(CP,')',1,120)
+Action : Shift and goto state 56
+
+State  : 56
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute OP tag body CP . LexToken(OP,'(',1,133)
+Action : Reduce rule [element -> OP tag body CP] with ['(',Tag(abc),Body{0}(0),')'] and goto state 13
+Result : <instance @ 0xb74cddec> (Elem(abc))
+
+State  : 9
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute element . LexToken(OP,'(',1,133)
+Action : Reduce rule [expression -> element] with [Elem(abc)] and goto state 16
+Result : <instance @ 0xb74cddec> (Elem(abc))
+
+State  : 46
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute expression . LexToken(OP,'(',1,133)
+Action : Reduce rule [token -> expression] with [Elem(abc)] and goto state 45
+Result : <instance @ 0xb74cddec> (Elem(abc))
+
+State  : 45
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token . LexToken(OP,'(',1,133)
+Action : Shift and goto state 14
+
+State  : 14
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token OP . LexToken(NAME,'def',1,134)
+Action : Shift and goto state 22
+
+State  : 22
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token OP NAME . LexToken(CP,')',1,137)
+Action : Reduce rule [name -> NAME] with ['def'] and goto state 24
+Result : <str @ 0xb75cff68> ('def')
+
+State  : 15
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token OP name . LexToken(CP,')',1,137)
+Action : Reduce rule [css_attrs -> <empty>] with [] and goto state 11
+Result : <Attributes @ 0xb75cd9bc> ({})
+
+State  : 27
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token OP name css_attrs . LexToken(CP,')',1,137)
+Action : Reduce rule [tag -> name css_attrs] with ['def',{}] and goto state 30
+Result : <instance @ 0xb74cdc0c> (Tag(def))
+
+State  : 26
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token OP tag . LexToken(CP,')',1,137)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74cd10c> (Body{0}(0))
+
+State  : 41
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token OP tag body . LexToken(CP,')',1,137)
+Action : Shift and goto state 56
+
+State  : 56
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token OP tag body CP . LexToken(CP,')',1,138)
+Action : Reduce rule [element -> OP tag body CP] with ['(',Tag(def),Body{0}(0),')'] and goto state 13
+Result : <instance @ 0xb74cd8cc> (Elem(def))
+
+State  : 9
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token element . LexToken(CP,')',1,138)
+Action : Reduce rule [expression -> element] with [Elem(def)] and goto state 16
+Result : <instance @ 0xb74cd8cc> (Elem(def))
+
+State  : 46
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token expression . LexToken(CP,')',1,138)
+Action : Reduce rule [token -> expression] with [Elem(def)] and goto state 45
+Result : <instance @ 0xb74cd8cc> (Elem(def))
+
+State  : 45
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token token . LexToken(CP,')',1,138)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74cdaec> (Body{0}(0))
+
+State  : 57
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token token body . LexToken(CP,')',1,138)
+Action : Reduce rule [body -> token body] with [Elem(def),Body{0}(0)] and goto state 7
+Result : <instance @ 0xb74cdaec> (Body{0}(1))
+
+State  : 57
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute token body . LexToken(CP,')',1,138)
+Action : Reduce rule [body -> token body] with [Elem(abc),Body{0}(1)] and goto state 7
+Result : <instance @ 0xb74cdaec> (Body{0}(2))
+
+State  : 55
+Stack  : expression expression expression OP_MACRO NAME css_attrs attribute body . LexToken(CP,')',1,138)
+Action : Reduce rule [body -> attribute body] with [('url', Text),Body{0}(2)] and goto state 6
+Result : <instance @ 0xb74cdaec> (Body{1}(2))
+
+State  : 51
+Stack  : expression expression expression OP_MACRO NAME css_attrs body . LexToken(CP,')',1,138)
+Action : Shift and goto state 63
+
+State  : 63
+Stack  : expression expression expression OP_MACRO NAME css_attrs body CP . LexToken(OP_MACRO,'(%',1,140)
+Action : Reduce rule [macro -> OP_MACRO NAME css_attrs body CP] with ['(%','internal',{},Body{1}(2),')'] and goto state 22
+Result : <instance @ 0xb74ba14c> (Macro(internal))
+
+State  : 8
+Stack  : expression expression expression macro . LexToken(OP_MACRO,'(%',1,140)
+Action : Reduce rule [expression -> macro] with [Macro(internal)] and goto state 17
+Result : <instance @ 0xb74ba14c> (Macro(internal))
+
+State  : 11
+Stack  : expression expression expression expression . LexToken(OP_MACRO,'(%',1,140)
+Action : Shift and goto state 6
+
+State  : 6
+Stack  : expression expression expression expression OP_MACRO . LexToken(NAME,'goto',1,142)
+Action : Shift and goto state 23
+
+State  : 23
+Stack  : expression expression expression expression OP_MACRO NAME . LexToken(NAME,'object',1,147)
+Action : Reduce rule [css_attrs -> <empty>] with [] and goto state 11
+Result : <Attributes @ 0xb75cdadc> ({})
+
+State  : 33
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs . LexToken(NAME,'object',1,147)
+Action : Shift and goto state 43
+
+State  : 43
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs NAME . LexToken(EXTEND,'~',1,154)
+Action : Reduce rule [token -> NAME] with ['object'] and goto state 42
+Result : <str @ 0xb74cdae0> ('object')
+
+State  : 45
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs token . LexToken(EXTEND,'~',1,154)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74cd02c> (Body{0}(0))
+
+State  : 57
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs token body . LexToken(EXTEND,'~',1,154)
+Action : Reduce rule [body -> token body] with ['object',Body{0}(0)] and goto state 7
+Result : <instance @ 0xb74cd02c> (Body{0}(1))
+
+State  : 51
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs body . LexToken(EXTEND,'~',1,154)
+Action : Shift and goto state 62
+
+State  : 62
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs body EXTEND . LexToken(VARIABLE,Variable (object),1,156)
+Action : Shift and goto state 7
+
+State  : 7
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs body EXTEND VARIABLE . LexToken(CP,')',1,164)
+Action : Reduce rule [django -> VARIABLE] with [<instance @ 0xb74cd84c>] and goto state 29
+Result : <instance @ 0xb74cd84c> (Variable (object))
+
+State  : 3
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs body EXTEND django . LexToken(CP,')',1,164)
+Action : Reduce rule [expression -> django] with [<instance @ 0xb74cd84c>] and goto state 18
+Result : <instance @ 0xb74cd84c> (Variable (object))
+
+State  : 46
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs body EXTEND expression . LexToken(CP,')',1,164)
+Action : Reduce rule [token -> expression] with [<instance @ 0xb74cd84c>] and goto state 45
+Result : <instance @ 0xb74cd84c> (Variable (object))
+
+State  : 45
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs body EXTEND token . LexToken(CP,')',1,164)
+Action : Reduce rule [body -> <empty>] with [] and goto state 8
+Result : <instance @ 0xb74cd24c> (Body{0}(0))
+
+State  : 57
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs body EXTEND token body . LexToken(CP,')',1,164)
+Action : Reduce rule [body -> token body] with [<instance @ 0xb74cd84c>,Body{0}(0)] and goto state 7
+Result : <instance @ 0xb74cd24c> (Body{0}(1))
+
+State  : 68
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs body EXTEND body . LexToken(CP,')',1,164)
+Action : Shift and goto state 71
+
+State  : 71
+Stack  : expression expression expression expression OP_MACRO NAME css_attrs body EXTEND body CP . LexToken(OP_MACRO,'(%',1,166)
+Action : Reduce rule [macro -> OP_MACRO NAME css_attrs body EXTEND body CP] with ['(%','goto',{},Body{0}(1),'~',Body{0}(1),')'] and goto state 23
+Result : <instance @ 0xb74cde4c> (Macro(goto))
+
+State  : 8
+Stack  : expression expression expression expression macro . LexToken(OP_MACRO,'(%',1,166)
+Action : Reduce rule [expression -> macro] with [Macro(goto)] and goto state 17
+Result : <instance @ 0xb74cde4c> (Macro(goto))
+
+State  : 11
+Stack  : expression expression expression expression expression . LexToken(OP_MACRO,'(%',1,166)
+Action : Shift and goto state 6
+
+State  : 6
+Stack  : expression expression expression expression expression OP_MACRO . LexToken(NAME,'link',1,168)
+Action : Shift and goto state 23
+
+State  : 23
+Stack  : expression expression expression expression expression OP_MACRO NAME . LexToken(NAME,'app',1,173)
+Action : Reduce rule [css_attrs -> <empty>] with [] and goto state 11
+Result : <Attributes @ 0xb75cdadc> ({})
+
+State  : 33
+Stack  : expression expression expression expression expression OP_MACRO NAME css_attrs . LexToken(NAME,'app',1,173)
+Action : Shift and goto state 43
+
+State  : 43
+Stack  : expression expression expression expression expression OP_MACRO NAME css_attrs NAME . LexToken(CLASS,'label',1,176)
+ERROR: Error  : expression expression expression expression expression OP_MACRO NAME css_attrs NAME . LexToken(CLASS,'label',1,176)
+Traceback (most recent call last):
+  File "../bin/hisp", line 52, in <module>
+    main()
+  File "../bin/hisp", line 43, in main
+    output = hisp.convert(input)
+  File "/usr/local/lib/python2.7/site-packages/hisp/__init__.py", line 58, in convert
+    return self.eval(self.parse(input))
+  File "/usr/local/lib/python2.7/site-packages/hisp/parse.py", line 166, in parse
+    return self.parser.parse(data, lexer, debug=self.debug)
+  File "/usr/local/lib/python2.7/site-packages/ply/yacc.py", line 261, in parse
+    return self.parsedebug(input,lexer,debug,tracking,tokenfunc)
+  File "/usr/local/lib/python2.7/site-packages/ply/yacc.py", line 519, in parsedebug
+    tok = self.errorfunc(errtoken)
+  File "/usr/local/lib/python2.7/site-packages/hisp/parse.py", line 26, in p_error
+    raise ConversionError('Error parsing at %s' % yacc.token())
+hisp.exceptions.ConversionError: Error parsing at LexToken(EXTEND,'~',1,183)

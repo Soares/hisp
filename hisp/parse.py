@@ -35,19 +35,19 @@ def p_element_open(o, tag, body, c):
 def p_element_closed(o, tag, attrs, c):
     return nodes.Elem(tag.name, tag.attrs + attrs)
 
-@parser('block : OB_BLOCK NAME tagtext EXTEND tokens CB')
+@parser('block : OB_BLOCK NAME django_text EXTEND tokens CB')
 def p_block_open(o, name, words, e, children, c):
     return nodes.Block(name, words, children)
 
-@parser('block : OB_BLOCK NAME tagtext CB')
+@parser('block : OB_BLOCK NAME django_text CB')
 def p_block_closed(o, name, words, c):
     return nodes.Block(name, words)
 
-@parser('macro : OP_MACRO NAME cssattrs body CP')
+@parser('macro : OP_MACRO NAME css_attrs body CP')
 def p_macro(o, name, attrs, params, c):
     return nodes.Macro(name, params.children, params.attrs, attrs)
 
-@parser('macro : OP_MACRO NAME cssattrs body EXTEND body CP')
+@parser('macro : OP_MACRO NAME css_attrs body EXTEND body CP')
 def p_macro_extended(o, name, attrs, params, e, body, c):
     return nodes.Macro(name, params.children, params.attrs,
             attrs + body.attrs, body.children)
@@ -59,20 +59,20 @@ def p_macro_extended(o, name, attrs, params, e, body, c):
 def p_name(part):
     return part
 
-@parser('tag : name cssattrs')
+@parser('tag : name css_attrs')
 def p_tag_named(name, attrs):
     return nodes.Tag(name, attrs)
 
-@parser('tag : cssattr cssattrs')
+@parser('tag : css_attr css_attrs')
 def p_tag_unnamed(attr, attrs):
     attrs.add(*attr)
     return nodes.Tag(None, attrs)
 
-@parser('cssattr : CLASS')
+@parser('css_attr : CLASS')
 def p_class(part):
     return ('class', part)
 
-@parser('cssattr : ID')
+@parser('css_attr : ID')
 def p_id(part):
     return ('id', part)
 
@@ -96,21 +96,33 @@ def p_body_empty():
 
 # Object Groups :::1
 
-@parser('expression : DOCTYPE | COMMENT | element | block | macro | VARIABLE | STRING')
-def p_expression(part):
-    return part
+@parser('django : DJANGO_COMMENT | block | VARIABLE')
+def p_django(tag):
+    return tag
 
-@parser('texpression : COMMENT | block | macro | VARIABLE | STRING | WORD | NAME')
-def p_texpression(part):
-    return part
+@parser('expression : DOCTYPE | HTML_COMMENT | element | macro | django')
+def p_expression(expr):
+    return expr
 
-@parser('tagexpression : macro | WORD | NAME | STRING')
+@parser('django_part : macro | SYMBOLS | NAME | STRING | dothash_name')
 def p_tagexpression(part):
     return part
 
-@parser('token : NAME | WORD | expression')
+@parser('text_part : django_part | django')
+def p_texpression(text):
+    return text
+
+@parser('token : NAME | SYMBOLS | STRING | expression | dothash_name')
 def p_token(token):
     return token
+
+@parser('dothash_name : CLASS')
+def p_dot_name(cls):
+    return '.' + cls
+
+@parser('dothash_name : ID')
+def p_hash_name(id):
+    return '#' + id
 
 # Object Lists :::1
 
@@ -122,8 +134,8 @@ def p_expressions(*parts):
 def p_tokens(*parts):
     return plist(parts)
 
-@parser('cssattrs : cssattr cssattrs |')
-def p_cssattrs(*parts):
+@parser('css_attrs : css_attr css_attrs |')
+def p_css_attrs(*parts):
     try:
         (name, value), attrs = parts
     except ValueError:
@@ -135,11 +147,11 @@ def p_cssattrs(*parts):
 def p_attrs(*parts):
     return plist(parts)
 
-@parser('tagtext : tagexpression tagtext |')
-def p_tagtext(*parts):
+@parser('django_text : django_part django_text |')
+def p_django_text(*parts):
     return plist(parts)
 
-@parser('text : texpression text |')
+@parser('text : text_part text |')
 def p_text(*parts):
     try:
         new, text = parts

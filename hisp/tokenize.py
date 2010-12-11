@@ -14,7 +14,8 @@ def token(regex, front=0, back=0):
 
 class Tokenizer:
     tokens = (
-        'COMMENT',
+        'DJANGO_COMMENT',
+        'HTML_COMMENT',
         'DOCTYPE',
         'OP_ATTR',
         'OP_CLOSER',
@@ -28,30 +29,39 @@ class Tokenizer:
         'CLASS',
         'ID',
         'NAME',
-        'WORD',
         'STRING',
+        'SYMBOLS',
     )
 
-    def t_COMMENT(self, t):
-        r'\(\s*!([^)\\]*(?:\\.[^)\\]*)*)\)'
-        t.value = nodes.Comment(t.value[2:-1])
+    def t_ignore_COMMENT(self, t):
+        r'\(\\/\/([^)\\]|\\.)*\)'
+        pass
+
+    def t_HTML_COMMENT(self, t):
+        r'\(!([^)\\]|\\.)*\)'
+        t.value = nodes.HtmlComment(t.value[2:-1])
+        return t
+
+    def t_DJANGO_COMMENT(self, t):
+        r'\{\#([^}\\]|\\.)*\}'
+        t.value = nodes.DjangoComment(t.value[2:-1])
         return t
 
     def t_DOCTYPE(self, t):
-        r'\(\s*~([^)\\]*(?:\\.[^)\\]*)*)\)'
+        r'\(~([^)\\]|\\.)*\)'
         t.value = nodes.Doctype(t.value[2:-1])
         return t
 
     def t_OP_ATTR(self, t):
-        r'\(\s*:'
+        r'\(:'
         return t
 
     def t_OP_MACRO(self, t):
-        r'\(\s*%'
+        r'\(%'
         return t
 
     def t_OP_CLOSER(self, t):
-        r'\(\s*/'
+        r'\(/'
         return t
 
     def t_OP(self, t):
@@ -59,7 +69,7 @@ class Tokenizer:
         return t
 
     def t_OB_BLOCK(self, t):
-        r'\{\s*%'
+        r'\{%'
         return t
 
     def t_EXTEND(self, t):
@@ -67,7 +77,7 @@ class Tokenizer:
         return t
 
     def t_VARIABLE(self, t):
-        r'\{([^}\\]*(?:\\.[^}\\]*)*)\}'
+        r'\{([^}\\]|\\.)*\}'
         t.value = nodes.Variable(t.value[1:-1])
         return t
 
@@ -93,13 +103,13 @@ class Tokenizer:
         r'[\w-]+'
         return t
 
-    def t_WORD(self, t):
-        r'[^({~"\s})]*[^({~"\s\w})][^({~"\s})]*'
+    def t_STRING(self, t):
+        r'"([^"\\]|\\.)*"'
+        t.value = nodes.String(t.value[1:-1])
         return t
 
-    def t_STRING(self, t):
-        r'"([^"\\]*(?:\\.[^"\\]*)*)"'
-        t.value = nodes.Atom(t.value[1:-1])
+    def t_SYMBOLS(self, t):
+        r'[^\s)}]+'
         return t
 
     def t_error(self, t):

@@ -19,8 +19,17 @@ class Atom(Node):
         return unicode(self.render) % self.value
 
 
-class Comment(Atom):
+class String(Atom):
+    def __repr__(self):
+        return '"%s"' % self.value
+
+
+class HtmlComment(Atom):
     render = '<!--%s-->'
+
+
+class DjangoComment(Atom):
+    render = '{#%s#}'
 
 
 class Variable(Atom):

@@ -8,7 +8,7 @@ from hisp.libraries import load
 class Hisp:
     def __init__(self, filetype=None, debug=False, libraries=None):
         self.filetype = filetype
-        self.libraries = tuple(map(load, libraries)) + (core,)
+        self.libraries = tuple(map(load, libraries or ())) + (core,)
         self.parse = Parser(debug).parse
 
     def setf(self, filetype):
@@ -46,7 +46,6 @@ class Hisp:
         try:
             return self.join(map(self.eval, value))
         except TypeError as e:
-            raise
             raise ConversionError("Can't evaluate unrecognized element '%s'" % value)
 
     def macro(self, name):
