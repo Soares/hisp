@@ -19,5 +19,5 @@ def input(type):
 
 for type in ('checkbox', 'file', 'hidden',
              'image', 'password', 'radio',
-             'reset', 'submit', 'text'):
+             'reset', 'submit', 'text', 'button'):
     macros.register(type, input(type))
