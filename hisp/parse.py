@@ -96,8 +96,8 @@ def p_body_empty():
 
 # Object Groups :::1
 
-@parser('string : NAME | SYMBOLS | STRING | dothash_name')
-def p_string(part):
+@parser('word : NAME | SYMBOLS | STRING | dothash_name')
+def p_word(part):
     return part
 
 @parser('django : DJANGO_COMMENT | block | VARIABLE')
@@ -129,12 +129,6 @@ def p_hash_name(id):
     return '#' + id
 
 # Object Lists :::1
-
-@parser('word : string word | string')
-def p_word(string, word=None):
-    word = word or nodes.Text()
-    word.add(string)
-    return word
 
 @parser('expressions : expression expressions |')
 def p_expressions(*parts):

@@ -100,7 +100,7 @@ class Tokenizer:
         return t
 
     def t_NAME(self, t):
-        r'[\w-]+'
+        r'[\w-]+(?=[\s~)}])'
         return t
 
     def t_STRING(self, t):
