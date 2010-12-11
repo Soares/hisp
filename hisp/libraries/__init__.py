@@ -1,4 +1,4 @@
-from ..macros import Library
+from hisp.macros import Library
 
 def load(library):
     """

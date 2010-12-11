@@ -1,9 +1,9 @@
 from itertools import chain
-from .doctypes import HTML, XHTML, DJANGO
-from .libraries.shortcuts import macros as shortcuts
-from .exceptions import ConversionError
-from .parse import Parser
-from .libraries import load
+from hisp.doctypes import HTML, XHTML, DJANGO
+from hisp.libraries.shortcuts import macros as shortcuts
+from hisp.exceptions import ConversionError
+from hisp.parse import Parser
+from hisp.libraries import load
 
 
 class Hisp:

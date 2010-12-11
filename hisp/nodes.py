@@ -32,8 +32,8 @@ class Doctype(Atom):
         self.value = value.strip().lower()
 
     def eval(self, hisp):
-        from .exceptions import ConversionError
-        from .doctypes import DOCTYPES, FILETYPES
+        from hisp.exceptions import ConversionError
+        from hisp.doctypes import DOCTYPES, FILETYPES
         import re
         consider = FILETYPES[hisp.filetype]
         for filetype in consider:
@@ -140,7 +140,7 @@ class Macro(Node):
         return 'Macro(%s)' % self.name
 
     def eval(self, hisp):
-        from .macros import BoundMacro
+        from hisp.macros import BoundMacro
         macro = hisp.macro(self.name)
         return BoundMacro(self, hisp, macro).rendered
 
