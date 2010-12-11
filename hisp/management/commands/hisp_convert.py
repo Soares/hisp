@@ -1,78 +1,51 @@
+from itertools import chain
 from django.core.management.base import BaseCommand
+from django.template import TemplateDoesNotExist
+from django.template.loaders.app_directories import app_template_dirs
+from django.template.loaders.app_directories import Loader as Apps
+from django.template.loaders.filesystem import Loader as Fs
+from django.conf import settings
 from optparse import make_option
-from hisp.doctypes import HTML, XHTML, DJANGO
 from hisp.management import hisper
+from hisp.loaders.convert import Loader
+import os
 
 
 class Command(BaseCommand):
     help = """
-    Convert hisp files into html files.
-    Given no args, convert hisp files found by the hisp template loaders.
-    Given args, will convert all named files.
-    filename.hisp will be converted to filename.hisp.html
-    See --help for other options.
+    Convert all hisp files found in TEMPLATE_DIRS and APP_DIRECTORIES.
+    "filename.hisp" will be converted and saved to "filename.hisp.html".
+    This is where the hisp.loaders.compiled.loader will look for complied
+    hisp files, so don't rename them if you're using that loader.
     """
 
     option_list = BaseCommand.option_list + (
-        make_option('-t', '--filetype',
-            type='choice', action='store', dest='filetype',
-            choices=['xhtml', 'html', 'django'], default=None,
-            help='Set the output file type'),
-        make_option('-d', '--debug',
-            action='store_true', dest='debug', default=False,
-            help='Run the parser in debug mode'),
-        make_option('-l', '--link',
-            action='append', dest='libraries',
-            help='Macro libraries to link into hisp'),
-        make_option('-p', '--print',
-            action='store_true', dest='show', default=False,
-            help='Write the output to stdout. '
-                 'Only valid when a single arg is given.'),
-        make_option('-o',
-            action='store', type='string', dest='outfile', default=False,
-            help='The destination for output. '
-                 'Only valid when a single arg is given.'),
+        make_option('--noapps',
+            type='store_false', dest='apps', default=True,
+            help="Prevents the conversion of hisp templates found in APP_DIRECTORIES"),
+        make_option('--nofs',
+            type='store_false', dest='fs', default=True,
+            help="Prevents the conversion of hisp templates found in TEMPLATE_DIRS"),
     )
 
-    def locate(self, filename):
-        pass
-
-    def destination(self, path):
-        return path + '.hisp'
-
-    def convert_file(self, hisp, filename, outfile=False, show=False):
-        path = self.locate(filename)
-        outfile = outfile and self.destination(path)
-        with open(path) as file:
-            output = hisp.convert(file.read())
-        if show:
-            print output
-        if outfile:
-            with open(outfile, 'w') as dest:
-                dest.write(output)
-
-    def convert_all(self, hisp):
-        pass
-
     def handle(self, *args, **kwargs):
-        filetype = dict(
-                html=HTML,
-                xhtml=XHTML,
-                django=DJANGO
-        )[kwargs.pop('filetype')]
-        libraries = kwargs.pop('libraries') or None
-        debug = kwargs.pop('debug')
-        hisp = hisper(filetype=filetype, debug=debug, libraries=libraries)
+        loader = Loader(filter(bool, (
+            kwargs['fs'] and Fs,
+            kwargs['apps'] and Apps)))
+        directories = chain(filter(bool, (
+            kwargs['fs'] and settings.TEMPLATE_DIRS,
+            kwargs['apps'] and app_template_dirs)))
+        hisp = hisper()
 
-        if len(args) == 1:
-            return self.convert_file(hisp, args[0], **kwargs)
-        if kwargs['show']:
-            raise ValueError("Can't print to stdout when converting multiple files.")
-        if kwargs['outfile']:
-            raise ValueError("Can't output to one file when converting multiple files.")
-        if len(args) == 0:
-            return self.convert_all(hisp)
-
-        kwargs['outfile'] = True
-        for arg in args:
-            self.convert_file(hisp, arg, **kwargs)
+        for dir in directories:
+            for (root, _, files) in os.path.walk(dir):
+                for filename in files:
+                    try:
+                        source, name = loader.load_template_source(filename, root)
+                    except TemplateDoesNotExist:
+                        continue
+                    print 'Converting....', name
+                    output = hisp.convert(source)
+                    dest = os.path.join(root, filename + '.html')
+                    with open(dest, 'w') as outfile:
+                        outfile.write(output)
