@@ -90,7 +90,7 @@ class Tokenizer:
         return t
 
     def t_CLASS(self, t):
-        r'\.([\w-]+)'
+        r'(?<=[^\s])\.([\w-]+)'
         t.value = t.value[1:]
         return t
 

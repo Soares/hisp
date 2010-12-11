@@ -96,7 +96,7 @@ def p_body_empty():
 
 # Object Groups :::1
 
-@parser('word : NAME | SYMBOLS | STRING | dothash_name')
+@parser('word : NAME | SYMBOLS | STRING')
 def p_word(part):
     return part
 
@@ -119,14 +119,6 @@ def p_texpression(text):
 @parser('token : expression | word')
 def p_token(token):
     return token
-
-@parser('dothash_name : CLASS')
-def p_dot_name(cls):
-    return '.' + cls
-
-@parser('dothash_name : ID')
-def p_hash_name(id):
-    return '#' + id
 
 # Object Lists :::1
 
