@@ -34,7 +34,7 @@ class Tokenizer:
     )
 
     def t_ignore_COMMENT(self, t):
-        r'\(\\/\/([^)\\]|\\.)*\)'
+        r'\(@([^)\\]|\\.)*\)'
         pass
 
     def t_HTML_COMMENT(self, t):

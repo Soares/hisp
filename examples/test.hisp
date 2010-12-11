@@ -7,5 +7,6 @@
 (%goto object ~ {object})
 (%link app.label ~ App.Label)
 {    %    test}
+(@ this is a test)
 
 (%internal "abc "{one}" two")

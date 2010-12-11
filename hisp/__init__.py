@@ -46,6 +46,7 @@ class Hisp:
         try:
             return self.join(map(self.eval, value))
         except TypeError as e:
+            raise
             raise ConversionError("Can't evaluate unrecognized element '%s'" % value)
 
     def macro(self, name):

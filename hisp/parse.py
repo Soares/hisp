@@ -96,6 +96,10 @@ def p_body_empty():
 
 # Object Groups :::1
 
+@parser('string : NAME | SYMBOLS | STRING | dothash_name')
+def p_string(part):
+    return part
+
 @parser('django : DJANGO_COMMENT | block | VARIABLE')
 def p_django(tag):
     return tag
@@ -104,7 +108,7 @@ def p_django(tag):
 def p_expression(expr):
     return expr
 
-@parser('django_part : macro | SYMBOLS | NAME | STRING | dothash_name')
+@parser('django_part : macro | word')
 def p_tagexpression(part):
     return part
 
@@ -112,7 +116,7 @@ def p_tagexpression(part):
 def p_texpression(text):
     return text
 
-@parser('token : NAME | SYMBOLS | STRING | expression | dothash_name')
+@parser('token : expression | word')
 def p_token(token):
     return token
 
@@ -125,6 +129,12 @@ def p_hash_name(id):
     return '#' + id
 
 # Object Lists :::1
+
+@parser('word : string word | string')
+def p_word(string, word=None):
+    word = word or nodes.Text()
+    word.add(string)
+    return word
 
 @parser('expressions : expression expressions |')
 def p_expressions(*parts):
