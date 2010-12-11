@@ -108,8 +108,8 @@ class Tokenizer:
 
     t_ignore = ' \t\n'
 
-    def __init__(self, optimize=False):
-        self.optimize = optimize
+    def __init__(self, debug=False):
+        self.debug = debug
 
     def lexer(self):
-        return lex(module=self, optimize=self.optimize)
+        return lex(module=self, optimize=not self.debug)

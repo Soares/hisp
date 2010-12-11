@@ -153,8 +153,8 @@ def p_text(*parts):
 class Parser:
     def __init__(self, debug=False):
         self.debug = debug
-        self.parser = yacc.yacc(start='expressions')
+        self.parser = yacc.yacc(start='expressions', optimize=not debug)
 
     def parse(self, data):
-        lexer = Tokenizer().lexer()
+        lexer = Tokenizer(self.debug).lexer()
         return self.parser.parse(data, lexer, debug=self.debug)
