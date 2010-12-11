@@ -17,12 +17,12 @@ class Loader(BaseLoader):
         return self._cached_loaders
 
     def load_template(self, template_name, template_dirs=None):
-        if template_name.endswith('.hisp'):
-            compiled_name = template_name + '.html'
-            for loader in self.loaders:
-                try:
-                    return loader(compiled_name, template_dirs)
-                except TemplateDoesNotExist:
-                    pass
-            raise TemplateDoesNotExist(compiled_name)
-        raise TemplateDoesNotExist(template_name)
+        if not template_name.endswith('.hisp'):
+            raise TemplateDoesNotExist(template_name)
+        compiled_name = template_name + '.html'
+        for loader in self.loaders:
+            try:
+                return loader(compiled_name, template_dirs)
+            except TemplateDoesNotExist:
+                pass
+        raise TemplateDoesNotExist(compiled_name)
