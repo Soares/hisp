@@ -8,7 +8,6 @@ def hisper(filetype=None, debug=False, libraries=None):
         filetype = DJANGO
     if libraries is None:
         libraries = settings.get('HISP_LIBRARIES', (
-            'hisp.libraries.shortcuts.macros',
             'hisp.libraries.django.macros',
         ))
     return Hisp(filetype=filetype, debug=debug, libraries=libraries)

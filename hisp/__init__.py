@@ -1,5 +1,5 @@
 from hisp.doctypes import HTML, XHTML, DJANGO
-from hisp.libraries.shortcuts import macros as shortcuts
+from hisp.libraries.core import macros as core
 from hisp.exceptions import ConversionError
 from hisp.parse import Parser
 from hisp.libraries import load
@@ -8,7 +8,7 @@ from hisp.libraries import load
 class Hisp:
     def __init__(self, filetype=None, debug=False, libraries=None):
         self.filetype = filetype
-        self.libraries = tuple(map(load, libraries)) + (shortcuts,)
+        self.libraries = tuple(map(load, libraries)) + (core,)
         self.parse = Parser(debug).parse
 
     def setf(self, filetype):
