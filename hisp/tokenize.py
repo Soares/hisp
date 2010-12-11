@@ -103,7 +103,7 @@ class Tokenizer:
         return t
 
     def t_error(self, t):
-        from .exceptions import ConversionError
+        from hisp.exceptions import ConversionError
         raise ConversionError("Illegal Character '%s'" % t.value[0])
 
     t_ignore = ' \t\n'
@@ -111,7 +111,7 @@ class Tokenizer:
     def __init__(self, debug=False):
         self.debug = debug
 
-    def lexer(self):
-        return lex(
-            module=self, optimize=not self.debug,
-            lextab='hisp.tables.lextab', outputdir='tables')
+    def lexer(self, **kwargs):
+        kwargs.setdefault('optimize', not self.debug)
+        kwargs.setdefault('lextab', 'hisp.tables.lextab')
+        return lex(module=self, **kwargs)

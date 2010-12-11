@@ -1,6 +1,6 @@
 from ply import yacc
 import nodes
-from .tokenize import Tokenizer
+from hisp.tokenize import Tokenizer
 tokens = Tokenizer.tokens
 
 # Helper Functions :::1
@@ -22,7 +22,7 @@ def plist(p):
     return lst
 
 def p_error(p):
-    from .exceptions import ConversionError
+    from hisp.exceptions import ConversionError
     raise ConversionError('Error parsing at %s' % yacc.token())
 
 # Top Level Elements :::1
@@ -154,9 +154,25 @@ class Parser:
     def __init__(self, debug=False):
         self.debug = debug
         self.parser = yacc.yacc(
-                start='expressions', optimize=not debug, debug=debug,
-                tabmodule='hisp.tables', outputdir='tables')
+                start='expressions', optimize=not debug, debug=False,
+                tabmodule='hisp.tables.parsetab', write_tables=False)
 
     def parse(self, data):
         lexer = Tokenizer(self.debug).lexer()
         return self.parser.parse(data, lexer, debug=self.debug)
+
+
+def generate_tables():
+    Tokenizer(False).lexer(
+        outputdir='tables',
+        lextab='lextab',
+        optimize=True)
+    yacc.yacc(
+        start='expressions',
+        outputdir='tables',
+        optimize=True,
+        debug=False)
+
+
+if __name__ == '__main__':
+    generate_tables()
