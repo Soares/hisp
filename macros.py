@@ -71,6 +71,13 @@ def link(node, label):
     node.attrs.add('href', '{%%url %s%%}' % label)
     return node.render('a')
 
+@django.register
+def addto(node, name):
+    head = '{%%block %s%%}{{block.super}}' % name
+    body = node.indent(node.children)
+    tail = '{%endblock%}'
+    return node.join(head, body, tail)
+
 
 def input(type):
     def input(node, *args, **kwargs):

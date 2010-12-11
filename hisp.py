@@ -1,19 +1,25 @@
+from doctypes import HTML
+
 class ConversionError(SyntaxError):
     pass
+
 
 class Hisp:
     def __init__(self):
         from macros import macros, django
         self.libraries = [macros, django]
+        self.filetype = HTML
 
     def setf(self, filetype):
-        pass
+        self.filetype = filetype
 
     def separate(self, *nodes):
         return u' '.join(map(self.eval, nodes))
 
     def close(self, head):
-        return head
+        if self.filetype == HTML:
+            return head
+        return '%s/' % head
 
     def indent(self, body):
         return body
@@ -25,7 +31,9 @@ class Hisp:
         return u''.join(map(self.eval, nodes))
 
     def flag(self, value):
-        return value
+        if self.filetype == 'HTML':
+            return self.eval(value)
+        return '{0}="{0}"'.format(self.eval(value))
 
     def eval(self, value):
         from nodes import Node
@@ -35,7 +43,7 @@ class Hisp:
             return unicode(value)
         if isinstance(value, Node):
             return value.eval(self)
-        return self.join(*map(self.eval, value))
+        return self.combine(*map(self.eval, value))
 
     def render(self, tag, attrs, children=None):
         from nodes import Elem
@@ -50,7 +58,7 @@ class Hisp:
 
 if __name__ == '__main__':
     from parse import Parser
-    data = open('examples/test.hisp').read()
+    data = open('examples/main.hisp').read()
     print data
 
     parser = Parser()

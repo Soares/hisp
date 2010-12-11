@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+{%extends "base.html"}
 
-{% block body %
+{%block body ~
     (#key
         (button.upper.left#save (:title "Save Now"))
         (button.upper.right#load (:title "Load"))
@@ -62,8 +62,6 @@
 
     (#layout (canvas#underlay))}
 
-{% load media %}
-{% block links % {block.super} ~
-    {% include_media "analyze.css" %}}
-{% block scripts % {block.super} ~
-    {% include_media "analyze.js" %}}
+{%load media}
+(%addto links ~ {%include_media "analyze.css"})
+(%addto scripts ~ {%include_media "analyze.js"})

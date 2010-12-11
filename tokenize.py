@@ -27,8 +27,8 @@ class Tokenizer:
         'VARIABLE',
         'CLASS',
         'ID',
-        'WORD',
         'NAME',
+        'WORD',
         'STRING',
     )
 
@@ -89,12 +89,12 @@ class Tokenizer:
         t.value = t.value[1:]
         return t
 
-    def t_WORD(self, t):
-        r'[^({~"\s})]*[^({~"\s\w})][^({~"\s})]*'
-        return t
-
     def t_NAME(self, t):
         r'[\w-]+'
+        return t
+
+    def t_WORD(self, t):
+        r'[^({~"\s})]*[^({~"\s\w})][^({~"\s})]*'
         return t
 
     def t_STRING(self, t):

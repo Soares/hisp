@@ -1,5 +1,7 @@
+HTML, XHTML, XML = 'HTML', 'XHTML', 'XML'
+
 doctypes = {
-    'HTML': {
+    HTML: {
         r'(html)?\s*(5?)': '<!DOCTYPE HTML>',
 
         r'(html)?\s*4\s*(t(ransitional)?)?': '<!DOCTYPE html PUBLIC '
@@ -17,7 +19,7 @@ doctypes = {
         r'(html)?\s*2': '<!DOCTYPE HTML PUBLIC '
             '"-//IETF//DTD HTML//EN">',
     },
-    'XHTML': {
+    XHTML: {
         r'x(html)?\s*5': '<!DOCTYPE HTML>',
         r'x(html)?\s*(t(ransitional)?)?': '<!DOCTYPE html PUBLIC '
             '"-//W3C//DTD XHTML 1.0 Transitional//EN" '
@@ -42,7 +44,7 @@ doctypes = {
             '"-//WAPFORUM//DTD XHTML Mobile 1.2//EN" '
             '"http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">',
     },
-    'XML': {
+    XML: {
         r'xml': '<?xml version="1.0" encoding="utf-8" ?>',
         r'xml\s+(\S+)': r'<?xml version="1.0" encoding="\1" ?>',
     },

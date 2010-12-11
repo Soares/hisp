@@ -64,7 +64,7 @@ def p_tag_named(name, attrs):
     return nodes.Tag(name, attrs)
 
 @parser('tag : cssattr cssattrs')
-def p_tag_unnamed(name, attr, attrs):
+def p_tag_unnamed(attr, attrs):
     attrs.add(*attr)
     return nodes.Tag(None, attrs)
 

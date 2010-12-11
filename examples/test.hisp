@@ -1,1 +1,11 @@
+(%if ie 6 ~ (abc))
+(a (:href http://google.com) "test")
+(%goto object ~ {object})
+(%internal (:url test)
+           (abc)
+           (def))
+(%goto object ~ {object})
+(%link app.label ~ App.Label)
+{    %    test}
+
 (%internal "abc "{one}" two")
