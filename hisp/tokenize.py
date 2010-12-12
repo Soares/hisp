@@ -57,27 +57,23 @@ class Tokenizer:
         return t
 
     def t_OP_ATTR(self, t):
-        r'\(:[\w-]+'
-        t.value = nodes.Attribute(t.value[2:])
+        r'\(:'
         return t
 
     def t_OP_MACRO(self, t):
-        r'\(%[\w-]+'
-        t.value = nodes.Macro(t.value[2:])
+        r'\(%'
         return t
 
     def t_OP_CLOSER(self, t):
-        r'\(/[\w-]+'
-        t.value = nodes.Element(t.value[1:])
+        r'\(/'
         return t
 
     def t_OP(self, t):
-        r'\([\w-]+'
+        r'\('
         return t
 
     def t_OB_BLOCK(self, t):
-        r'\{%[^\s{(~)}]+'
-        t.value = nodes.Block(t.value[2:])
+        r'\{%'
         return t
 
     def t_EXTEND(self, t):
