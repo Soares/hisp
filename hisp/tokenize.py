@@ -57,23 +57,27 @@ class Tokenizer:
         return t
 
     def t_OP_ATTR(self, t):
-        r'\(:'
+        r'\(:[\w-]+'
+        t.value = nodes.Attribute(t.value[2:])
         return t
 
     def t_OP_MACRO(self, t):
-        r'\(%'
+        r'\(%[\w-]+'
+        t.value = nodes.Macro(t.value[2:])
         return t
 
     def t_OP_CLOSER(self, t):
-        r'\(/'
+        r'\(/[\w-]+'
+        t.value = nodes.Element(t.value[1:])
         return t
 
     def t_OP(self, t):
-        r'\('
+        r'\([\w-]+'
         return t
 
     def t_OB_BLOCK(self, t):
-        r'\{%'
+        r'\{%[^\s{(~)}]+'
+        t.value = nodes.Block(t.value[2:])
         return t
 
     def t_EXTEND(self, t):
@@ -99,7 +103,7 @@ class Tokenizer:
         return t
 
     def t_ID(self, t):
-        r'\#([\w-]+)'
+        r'(?<=[^\s])\#([\w-]+)'
         t.value = t.value[1:]
         return t
 
