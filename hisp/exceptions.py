@@ -15,21 +15,24 @@ class HispError(Exception):
         self.original = original
         super(HispError, self).__init__(message)
 
-    def indent(string, tab='\t'):
+    def indent(self, string, tab='\t'):
         return '\n'.join(tab + line for line in string.split('\n'))
 
     def __str__(self):
-        f = StringIO()
-        print >> f, ''
-        if self.original:
-            print >> f, self.original
-        else:
+        try:
+            f = StringIO()
             print >> f, ''
-        for item in reversed(self.contexts):
-            print >> f, 'In %s' % repr(item)
-        for arg in self.args:
-            print >> f, self.indent(arg).rstrip()
-        print >> f, super(HispError, self).__str__()
+            if self.original:
+                print >> f, self.original
+            else:
+                print >> f, ''
+            for item in reversed(self.contexts):
+                print >> f, 'In %s' % repr(item)
+            for arg in self.args:
+                print >> f, self.indent(str(arg)).rstrip()
+        except Exception as e:
+            print 'DOUBLE EXCEPTION! WE HAVE TO GO DEEPER.'
+            print >> f, e
         return f.getvalue()
 
 

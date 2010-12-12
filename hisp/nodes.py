@@ -1,4 +1,5 @@
 from hisp.exceptions import ParseError
+import re
 
 class Node:
     def eval(self, hisp):
@@ -19,9 +20,38 @@ class Atom(Node):
         return unicode(self.render) % self.value
 
 
-class String(Atom):
+class Literal(Atom):
+    ESCAPE = "'"
+
+    @classmethod
+    def escape(cls, value, char):
+        search = re.compile(r'((?<!\\)(?:\\\\)*)(\\%s)' % char)
+        return search.sub(r'\1' + char, value)
+
+    @classmethod
+    def deslash(cls, value):
+        return value.replace(r'\\', '\\')
+
+    @classmethod
+    def render(cls, value):
+        return cls.deslash(reduce(cls.escape, cls.ESCAPE, value))
+
+    def __repr__(self):
+        return u"'%s'" % self.value
+
+    def eval(self, hisp):
+        return self.render(self.value)
+
+
+class String(Literal):
+    variable = re.compile(r'\{((?:[^}\\]|\\.)*)\}')
+    ESCAPE = '"'
+
     def __repr__(self):
         return u'"%s"' % self.value
+
+    def eval(self, hisp):
+        return self.render(self.variable.sub(r'{{\1}}', self.value))
 
 
 class HtmlComment(Atom):
@@ -70,7 +100,6 @@ class Elem(Node):
         return hisp.chain(u'<%s>' % head, body, u'</%s>' % tag)
 
     def __init__(self, tag, lineno):
-        print 'TAG IS', tag
         self.tag = tag.strip() or None
         self.lineno = lineno
         self.children = None

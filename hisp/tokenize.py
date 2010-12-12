@@ -29,6 +29,7 @@ class Tokenizer:
         'CLASS',
         'ID',
         'STRING',
+        'LITERAL',
         'WORD',
     )
 
@@ -116,8 +117,13 @@ class Tokenizer:
         t.value = nodes.String(t.value[1:-1])
         return t
 
+    def t_LITERAL(self, t):
+        r"'([^'\\]|\\.)*'"
+        t.value = nodes.Literal(t.value[1:-1])
+        return t
+
     def t_WORD(self, t):
-        r'[^\s")}]+'
+        r'[^\s"\')}]+'
         return t
 
     def t_error(self, t):
