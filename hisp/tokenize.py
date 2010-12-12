@@ -1,5 +1,6 @@
 from ply.lex import TOKEN, lex
 import nodes
+import re
 
 def token(regex, front=0, back=0):
     @TOKEN(regex)
@@ -77,7 +78,12 @@ class Tokenizer:
         return t
 
     def t_BLOCK(self, t):
-        r'\{%\s*[^\s{(~)}]+'
+        r'\{%([^"~}\\]|\\.|"([^"\\]|\\.)*")+(?=[~}])'
+        # A block is {% followed by
+        # any text except "'s, \'s, }'s, and ~'s
+        # any escaped characters
+        # any string literals
+        # up to but not including a } or a ~
         t.value = nodes.Block(t.value[2:], t.lexer.lineno)
         return t
 
@@ -137,6 +143,7 @@ class Tokenizer:
     def lexer(self, **kwargs):
         kwargs.setdefault('optimize', not self.debug)
         kwargs.setdefault('lextab', 'hisp.tables.lextab')
+        #kwargs.setdefault('reflags', re.DOTALL)
         return lex(module=self, **kwargs)
 
 

@@ -43,15 +43,13 @@ def p_element_closed(elem, css_attrs, attrs, c):
     elem.set_attrs(attrs)
     return elem
 
-@parser('block : BLOCK words EXTEND tokens CB')
-def p_block_open(block, words, e, children, c):
-    block.set_head(words)
+@parser('block : BLOCK EXTEND tokens CB')
+def p_block_open(block, e, children, c):
     block.set_children(children)
     return block
 
-@parser('block : BLOCK words CB')
-def p_block_closed(block, words, c):
-    block.set_head(words)
+@parser('block : BLOCK CB')
+def p_block_closed(block, c):
     return block
 
 @parser('macro : MACRO css_attrs body CP')
@@ -112,10 +110,6 @@ def p_token(token):
 
 # Object Lists :::1
 
-@parser('statements : statement statements |')
-def p_statements(*parts):
-    return plist(parts)
-
 @parser('tokens : token tokens |')
 def p_tokens(*parts):
     return plist(parts)
@@ -133,10 +127,6 @@ def p_attrs(attr=None, attrs=None):
         return nodes.Attributes()
     attrs.add(attr)
     return attrs
-
-@parser('words : word words |')
-def p_words(*parts):
-    return plist(parts)
 
 @parser('text : word text | django text |')
 def p_text(text=None, value=None):

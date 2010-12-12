@@ -21,8 +21,6 @@ class Atom(Node):
 
 
 class Literal(Atom):
-    ESCAPE = "'"
-
     @classmethod
     def escape(cls, value, char):
         search = re.compile(r'((?<!\\)(?:\\\\)*)(\\%s)' % char)
@@ -33,25 +31,24 @@ class Literal(Atom):
         return value.replace(r'\\', '\\')
 
     @classmethod
-    def render(cls, value):
-        return cls.deslash(reduce(cls.escape, cls.ESCAPE, value))
+    def render(cls, value, special):
+        return cls.deslash(reduce(cls.escape, special, value))
 
     def __repr__(self):
         return u"'%s'" % self.value
 
     def eval(self, hisp):
-        return self.render(self.value)
+        return self.render(self.value, "'")
 
 
 class String(Literal):
     variable = re.compile(r'\{((?:[^}\\]|\\.)*)\}')
-    ESCAPE = '"'
 
     def __repr__(self):
         return u'"%s"' % self.value
 
     def eval(self, hisp):
-        return self.render(self.variable.sub(r'{{\1}}', self.value))
+        return self.render(self.variable.sub(r'{{\1}}', self.value), '"')
 
 
 class HtmlComment(Atom):
@@ -159,13 +156,10 @@ class Macro(Node):
 
 
 class Block(Node):
-    def __init__(self, name, lineno):
-        self.name = name
-        self.lineno = lineno
+    def __init__(self, head, lineno):
+        self.name = head.strip().split()[0]
+        self.head = Literal.render(head, "~}")
         self.children = None
-
-    def set_head(self, words):
-        self.words = words
 
     def set_children(self, children):
         self.children = children
@@ -174,11 +168,10 @@ class Block(Node):
         return u'Block(%s)' % self.name
 
     def eval(self, hisp):
-        tag = hisp.separate(self.name, *self.words)
         if self.children is None:
-            return u'{%%%s%%}' % tag
+            return u'{%%%s%%}' % self.head
         body = hisp.join(self.children)
-        return u'{%%%s%%}%s{%%end%s%%}' % (tag, body, self.name)
+        return u'{%%%s%%}%s{%%end%s%%}' % (self.head, body, self.name)
 
 
 # Items :::1
@@ -233,10 +226,10 @@ class Attributes(Node, dict):
         return result
 
     def eval(self, hisp):
-        return hisp.separate(*(
-            u'%s="%s"' % (name, hisp.separate(*values))
+        attrs = [u'%s="%s"' % (name, hisp.separate(*values))
             if any(values) else hisp.flag(name)
-            for (name, values) in self.items()))
+            for (name, values) in self.items()]
+        return hisp.separate(*attrs)
 
 class Body:
     def __init__(self):
