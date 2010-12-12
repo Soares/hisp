@@ -117,7 +117,7 @@ class Elem(Node):
         self.children = children
 
     def __repr__(self):
-        return (self.tag or self.DEFAULT).title()
+        return (self.tag or '') + (self.attrs.clsids() if self.attrs else '')
 
     def eval(self, hisp):
         return self.render(hisp, self.tag, self.attrs, self.children)
@@ -199,7 +199,7 @@ class Value(Node):
         self.text = []
 
     def __repr__(self):
-        return u'Value'
+        return ''.join(map(repr, self.text))
 
     def __len__(self):
         return len(self.text)
@@ -222,6 +222,15 @@ class Attributes(Node, dict):
     def update(self, other):
         for (key, values) in other.items():
             self.merge(key, values)
+
+    def clsids(self):
+        result = u''
+        for (key, value) in self.items():
+            if key == u'class':
+                result += '.%s' % repr(value)
+            if key == u'id':
+                result += '#%s' % repr(value)
+        return result
 
     def eval(self, hisp):
         return hisp.separate(*(
