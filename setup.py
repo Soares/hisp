@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
 	name='hisp',
-	version='0.1.0',
+	version='1.0.0a',
 	install_requires=['ply==3.3'],
     description='HTML generator. Lisp syntax. Django integration.',
 	author='Nate Soares',
