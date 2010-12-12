@@ -53,7 +53,7 @@ DOCTYPES = {
         r'xml\s+(\S+)': r'<?xml version="1.0" encoding="\1" ?>',
     },
     DJANGO: {
-        r'(html4|html4trans|xhtml11|xhtml11trans|html5)( silent)?': r'{% doctype \1\2 %}',
+        r'(html4|html4trans|xhtml1|xhtml1trans|html5)( silent|)': r'{% doctype \1\2 %}',
     },
 }
 
