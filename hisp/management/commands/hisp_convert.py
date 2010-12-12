@@ -35,10 +35,9 @@ class Command(BaseCommand):
             kwargs['apps'] and app_template_dirs)))
         hisp = hisper()
 
-        for dir in directories:
+        for dir in set(directories):
             for (root, _, files) in os.walk(dir):
                 for filename in files:
-                    print 'trying...', filename, root
                     try:
                         source, name = loader.load_template_source(filename, [root])
                     except TemplateDoesNotExist:
