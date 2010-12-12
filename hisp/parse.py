@@ -1,14 +1,17 @@
 from ply import yacc
 import nodes
-from hisp.tokenize import Tokenizer
+from hisp.tokenize import Tokenizer, ERROR_MAP, ERROR_SHOW_NEXT
 tokens = Tokenizer.tokens
 
 # Helper Functions :::1
 
-def parser(regex):
+def parser(regex, lineno=False):
     def decorate(fn):
         def parse(p):
-            p[0] = fn(*p[1:])
+            if not lineno:
+                p[0] = fn(*p[1:])
+            else:
+                p[0] = fn(*p[1:], lineno=p.lexer.lineno)
         parse.__doc__ = '\n|'.join(regex.split('|'))
         return parse
     return decorate
@@ -22,26 +25,13 @@ def plist(p):
     return lst
 
 def p_error(p):
-    name = {
-        'DJANGO_COMMENT': 'django comment',
-        'HTML_COMMENT': 'html comment',
-        'DOCTYPE': 'doctype declaration',
-        'OP_ATTR': 'attribute',
-        'OP_CLOSER': ')',
-        'OP_MACRO': 'macro',
-        'OP': 'tag',
-        'OB_BLOCK': 'block',
-        'EXTEND': '~',
-        'CB': '}',
-        'CP': '(',
-        'VARIABLE': 'django variable',
-        'CLASS': 'class attribute',
-        'ID': 'id attribute',
-        'NAME': 'word',
-        'STRING': 'string',
-        'SYMBOLS': 'text',
-    }[p.type]
-    raise SyntaxError("Unexpected %s at line %s: '%s'" % (name, p.lineno, p.value))
+    if not p:
+        raise SyntaxError('Unexpected end of file.')
+    value = p.value
+    if p.type in ERROR_SHOW_NEXT:
+        value += yacc.token().value
+    err = "Unexpected %s at line %s: '%s'" % (ERROR_MAP[p.type], p.lineno, value)
+    raise SyntaxError(err)
 
 # Top Level Elements :::1
 
@@ -61,14 +51,14 @@ def p_block_open(o, name, words, e, children, c):
 def p_block_closed(o, name, words, c):
     return nodes.Block(name, words)
 
-@parser('macro : OP_MACRO NAME css_attrs body CP')
-def p_macro(o, name, attrs, params, c):
-    return nodes.Macro(name, params.children, params.attrs, attrs)
+@parser('macro : OP_MACRO NAME css_attrs body CP', True)
+def p_macro(o, name, attrs, params, c, lineno):
+    return nodes.Macro(name, params.children, params.attrs, attrs, lineno=lineno)
 
-@parser('macro : OP_MACRO NAME css_attrs body EXTEND body CP')
-def p_macro_extended(o, name, attrs, params, e, body, c):
+@parser('macro : OP_MACRO NAME css_attrs body EXTEND body CP', True)
+def p_macro_extended(o, name, attrs, params, e, body, c, lineno):
     return nodes.Macro(name, params.children, params.attrs,
-            attrs + body.attrs, body.children)
+            attrs + body.attrs, body.children, lineno=lineno)
 
 
 # Specific Helpers :::1

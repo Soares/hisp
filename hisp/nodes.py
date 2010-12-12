@@ -141,16 +141,21 @@ class Body:
 
 
 class Macro(Node):
-    def __init__(self, name, args, kwargs, attrs, children=None):
+    def __init__(self, name, args, kwargs, attrs, children=None, lineno=None):
         self.name, self.args, self.kwargs = name, args, kwargs
         self.attrs, self.children = attrs, children
+        self.lineno = lineno
 
     def __repr__(self):
         return 'Macro(%s)' % self.name
 
     def eval(self, hisp):
         from hisp.macros import BoundMacro
-        macro = hisp.macro(self.name)
+        from hisp.exceptions import MacroNotFound
+        try:
+            macro = hisp.macro(self.name)
+        except KeyError:
+            raise MacroNotFound("Can not find macro '%s' on line %d" % (self.name, self.lineno))
         return BoundMacro(self, hisp, macro).rendered
 
 

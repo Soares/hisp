@@ -49,11 +49,10 @@ class Hisp:
             reraise("Can't evaluate unrecognized element '%s' % value")
 
     def macro(self, name):
-        from hisp.exceptions import MacroNotFound
         for library in self.libraries:
             if name in library:
                 return library[name]
-        raise MacroNotFound("no such macro '%s'" % name)
+        raise KeyError
 
     def convert(self, input):
         return self.eval(self.parse(input))

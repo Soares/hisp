@@ -3,5 +3,4 @@
 (test (:syntax error))
 (%library error)
 (abc)
-(@test syntax error)
 (def)

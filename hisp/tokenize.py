@@ -128,3 +128,25 @@ class Tokenizer:
         kwargs.setdefault('optimize', not self.debug)
         kwargs.setdefault('lextab', 'hisp.tables.lextab')
         return lex(module=self, **kwargs)
+
+ERROR_MAP = {
+    'DJANGO_COMMENT': 'django comment',
+    'HTML_COMMENT': 'html comment',
+    'DOCTYPE': 'doctype declaration',
+    'OP_ATTR': 'attribute',
+    'OP_CLOSER': ')',
+    'OP_MACRO': 'macro',
+    'OP': 'tag',
+    'OB_BLOCK': 'block',
+    'EXTEND': '~',
+    'CB': '}',
+    'CP': '(',
+    'VARIABLE': 'django variable',
+    'CLASS': 'class attribute',
+    'ID': 'id attribute',
+    'NAME': 'word',
+    'STRING': 'string',
+    'SYMBOLS': 'text',
+}
+
+ERROR_SHOW_NEXT = ('OP_ATTR', 'OP_CLOSER', 'OP_MACRO', 'OP', 'OB_BLOCK')
