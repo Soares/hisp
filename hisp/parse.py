@@ -121,7 +121,7 @@ def p_tagexpression(part):
     return part
 
 @parser('text_part : django_part | django')
-def p_texpression(text):
+def p_text_part(text):
     return text
 
 @parser('token : expression | word')
