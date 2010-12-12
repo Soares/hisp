@@ -17,20 +17,19 @@ class Tokenizer:
         'DJANGO_COMMENT',
         'HTML_COMMENT',
         'DOCTYPE',
-        'OP_ATTR',
-        'OP_CLOSER',
-        'OP_MACRO',
-        'OP',
-        'OB_BLOCK',
+        'ATTR',
+        'CLOSER',
+        'MACRO',
+        'ELEM',
+        'BLOCK',
         'EXTEND',
         'CB',
         'CP',
         'VARIABLE',
         'CLASS',
         'ID',
-        'NAME',
         'STRING',
-        'SYMBOLS',
+        'WORD',
     )
 
     def t_newline(self, t):
@@ -56,24 +55,29 @@ class Tokenizer:
         t.value = nodes.Doctype(t.value[2:-1])
         return t
 
-    def t_OP_ATTR(self, t):
-        r'\(:'
+    def t_ATTR(self, t):
+        r'\(:\s*[\w-]+'
+        t.value = nodes.Attribute(t.value[2:])
         return t
 
-    def t_OP_MACRO(self, t):
-        r'\(%'
+    def t_MACRO(self, t):
+        r'\(%\s*[^\s{(.#~)}]+'
+        t.value = nodes.Macro(t.value[2:], t.lexer.lineno)
         return t
 
-    def t_OP_CLOSER(self, t):
-        r'\(/'
+    def t_CLOSER(self, t):
+        r'\(/\s*[\w-]*'
+        t.value = nodes.Elem(t.value[2:], t.lexer.lineno)
         return t
 
-    def t_OP(self, t):
-        r'\('
+    def t_ELEM(self, t):
+        r'\(\s*[\w-]*'
+        t.value = nodes.Elem(t.value[1:], t.lexer.lineno)
         return t
 
-    def t_OB_BLOCK(self, t):
-        r'\{%'
+    def t_BLOCK(self, t):
+        r'\{%\s*[^\s{(~)}]+'
+        t.value = nodes.Block(t.value[2:], t.lexer.lineno)
         return t
 
     def t_EXTEND(self, t):
@@ -94,17 +98,17 @@ class Tokenizer:
         return t
 
     def t_CLASS(self, t):
-        r'(?<=[^\s])\.([\w-]+)'
-        t.value = t.value[1:]
+        r'(?<!\s)\.([\w-]+)'
+        attr = nodes.Attribute('class')
+        attr.set_value(t.value[1:])
+        t.value = attr
         return t
 
     def t_ID(self, t):
-        r'(?<=[^\s])\#([\w-]+)'
-        t.value = t.value[1:]
-        return t
-
-    def t_NAME(self, t):
-        r'[\w-]+(?=[\s~.#)}])'
+        r'(?<!\s)\#([\w-]+)'
+        attr = nodes.Attribute('id')
+        attr.set_value(t.value[1:])
+        t.value = attr
         return t
 
     def t_STRING(self, t):
@@ -112,8 +116,8 @@ class Tokenizer:
         t.value = nodes.String(t.value[1:-1])
         return t
 
-    def t_SYMBOLS(self, t):
-        r'[^\s)}]+'
+    def t_WORD(self, t):
+        r'[^\s")}]+'
         return t
 
     def t_error(self, t):
@@ -129,15 +133,16 @@ class Tokenizer:
         kwargs.setdefault('lextab', 'hisp.tables.lextab')
         return lex(module=self, **kwargs)
 
+
 ERROR_MAP = {
     'DJANGO_COMMENT': 'django comment',
     'HTML_COMMENT': 'html comment',
     'DOCTYPE': 'doctype declaration',
-    'OP_ATTR': 'attribute',
-    'OP_CLOSER': ')',
-    'OP_MACRO': 'macro',
-    'OP': 'tag',
-    'OB_BLOCK': 'block',
+    'ATTR': 'attribute',
+    'CLOSER': ')',
+    'MACRO': 'macro',
+    'ELEM': 'tag',
+    'BLOCK': 'block',
     'EXTEND': '~',
     'CB': '}',
     'CP': '(',
@@ -146,7 +151,5 @@ ERROR_MAP = {
     'ID': 'id attribute',
     'NAME': 'word',
     'STRING': 'string',
-    'SYMBOLS': 'text',
+    'WORD': 'text',
 }
-
-ERROR_SHOW_NEXT = ('OP_ATTR', 'OP_CLOSER', 'OP_MACRO', 'OP', 'OB_BLOCK')

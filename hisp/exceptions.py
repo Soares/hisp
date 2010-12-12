@@ -1,6 +1,10 @@
 from StringIO import StringIO
 
 
+class ParseError(Exception):
+    pass
+
+
 class MacroNotFound(Exception):
     pass
 
