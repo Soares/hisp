@@ -43,11 +43,11 @@ def p_element_open(o, tag, body, c):
 def p_element_closed(o, tag, attrs, c):
     return nodes.Elem(tag.name, tag.attrs + attrs)
 
-@parser('block : OB_BLOCK NAME django_text EXTEND tokens CB')
+@parser('block : OB_BLOCK NAME words EXTEND tokens CB')
 def p_block_open(o, name, words, e, children, c):
     return nodes.Block(name, words, children)
 
-@parser('block : OB_BLOCK NAME django_text CB')
+@parser('block : OB_BLOCK NAME words CB')
 def p_block_closed(o, name, words, c):
     return nodes.Block(name, words)
 
@@ -116,11 +116,7 @@ def p_django(tag):
 def p_expression(expr):
     return expr
 
-@parser('django_part : macro | word')
-def p_tagexpression(part):
-    return part
-
-@parser('text_part : django_part | django')
+@parser('text_part : word | django')
 def p_text_part(text):
     return text
 
@@ -151,8 +147,8 @@ def p_css_attrs(*parts):
 def p_attrs(*parts):
     return plist(parts)
 
-@parser('django_text : django_part django_text |')
-def p_django_text(*parts):
+@parser('words : word words |')
+def p_words(*parts):
     return plist(parts)
 
 @parser('text : text_part text |')

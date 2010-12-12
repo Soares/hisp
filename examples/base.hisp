@@ -3,7 +3,7 @@
     (head
         (meta (:charset "utf-8"))
         (title "Green Primer")
-        (link (:rel icon) (:type image/png) (:href {MEDIA_URL} media/img/favicon.png))
+        (link (:rel icon) (:type image/png) (:href {MEDIA_URL}media/img/favicon.png))
         {%load media}
         {%block links ~
             {%include_media "main.css"}})
