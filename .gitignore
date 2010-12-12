@@ -1,4 +1,7 @@
 *.pyc
 build/
+dist/
+MANIFEST
+hisp.egg-info
 hisp/tables/parsetab.py
 hisp/tables/lextab.py
