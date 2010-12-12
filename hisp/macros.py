@@ -14,7 +14,7 @@ class Library(dict):
         elif name is None:
             # @register
             name = fn.__name__
-        self[name] = fn
+        self[name.upper()] = fn
 
 
 class BoundMacro:

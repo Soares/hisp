@@ -142,7 +142,8 @@ class Body:
 
 class Macro(Node):
     def __init__(self, name, args, kwargs, attrs, children=None, lineno=None):
-        self.name, self.args, self.kwargs = name, args, kwargs
+        self.name = name.upper()
+        self.args, self.kwargs = args, kwargs
         self.attrs, self.children = attrs, children
         self.lineno = lineno
 
