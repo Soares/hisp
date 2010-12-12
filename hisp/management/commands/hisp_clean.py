@@ -11,19 +11,19 @@ class Command(BaseCommand):
 
     option_list = BaseCommand.option_list + (
         make_option('-a', '--apps',
-            type='store_true', dest='apps', default=False,
+            action='store_true', dest='apps', default=False,
             help='Clean the .hisp.html files in APP_DIRECTORIES as well'),
         make_option('--nofs',
-            type='store_false', dest='fs', default=True,
+            action='store_false', dest='fs', default=True,
             help='Prevent the cleaning of .hisp.html files in TEMPLATE_DIRS'),
     )
 
     def handle(self, *args, **kwargs):
-        directories = chain(filter(bool, (
+        directories = chain(*filter(bool, (
             kwargs['fs'] and settings.TEMPLATE_DIRS,
             kwargs['apps'] and app_template_dirs)))
         for dir in directories:
-            for (root, _, files) in os.path.walk(dir):
+            for (root, _, files) in os.walk(dir):
                 for filename in files:
                     if filename.endswith('.hisp.html'):
                         path = os.path.join(root, filename)

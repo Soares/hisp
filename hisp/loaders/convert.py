@@ -14,7 +14,10 @@ class Loader(BaseLoader):
         # Resolve loaders on demand to avoid circular imports
         if not self._cached_loaders:
             for loader in self._loaders:
-                self._cached_loaders.append(find_template_loader(loader))
+                if isinstance(loader, BaseLoader):
+                    self._cached_loaders.append(loader)
+                else:
+                    self._cached_loaders.append(find_template_loader(loader))
         return self._cached_loaders
 
     def load_template_source(self, template_name, template_dirs=None):

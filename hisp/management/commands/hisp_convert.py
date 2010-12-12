@@ -2,8 +2,6 @@ from itertools import chain
 from django.core.management.base import BaseCommand
 from django.template import TemplateDoesNotExist
 from django.template.loaders.app_directories import app_template_dirs
-from django.template.loaders.app_directories import Loader as Apps
-from django.template.loaders.filesystem import Loader as Fs
 from django.conf import settings
 from optparse import make_option
 from hisp.management import hisper
@@ -21,30 +19,31 @@ class Command(BaseCommand):
 
     option_list = BaseCommand.option_list + (
         make_option('-a', '--apps',
-            type='store_true', dest='apps', default=False,
+            action='store_true', dest='apps', default=False,
             help='Converts hisp files found in APP_DIRECTORIES as well'),
         make_option('--nofs',
-            type='store_false', dest='fs', default=True,
+            action='store_false', dest='fs', default=True,
             help='Prevents the conversion of hisp templates found in TEMPLATE_DIRS'),
     )
 
     def handle(self, *args, **kwargs):
         loader = Loader(filter(bool, (
-            kwargs['fs'] and Fs,
-            kwargs['apps'] and Apps)))
-        directories = chain(filter(bool, (
+            kwargs['fs'] and 'django.template.loaders.app_directories.Loader',
+            kwargs['apps'] and 'django.template.loaders.filesystem.Loader')))
+        directories = chain(*filter(bool, (
             kwargs['fs'] and settings.TEMPLATE_DIRS,
             kwargs['apps'] and app_template_dirs)))
         hisp = hisper()
 
         for dir in directories:
-            for (root, _, files) in os.path.walk(dir):
+            for (root, _, files) in os.walk(dir):
                 for filename in files:
+                    print 'trying...', filename, root
                     try:
-                        source, name = loader.load_template_source(filename, root)
+                        source, name = loader.load_template_source(filename, [root])
                     except TemplateDoesNotExist:
                         continue
-                    print 'Converting....', name
+                    print 'Converting %s....' % name
                     output = hisp.convert(source)
                     dest = os.path.join(root, filename + '.html')
                     with open(dest, 'w') as outfile:
