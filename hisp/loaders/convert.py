@@ -21,6 +21,8 @@ class Loader(BaseLoader):
         return self._cached_loaders
 
     def load_template_source(self, template_name, template_dirs=None):
+        if not template_name.endswith('.hisp'):
+            raise TemplateDoesNotExist(template_name)
         for loader in self.loaders:
             try:
                return loader.load_template_source(template_name, template_dirs)
