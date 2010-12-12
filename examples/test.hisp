@@ -1,3 +1,9 @@
-(pre "now son, look, I need \" quotes up in this bitch"
-"this string {has a \" variable} within it"
-'this string {doesn\'t give a shit}')
+(~)
+(html
+  (head
+    (meta "charset")
+    (title "test"))
+  (body
+    (:class test)
+    (:class abc)
+    ))

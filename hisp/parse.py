@@ -151,7 +151,7 @@ class Parser:
     def __init__(self, debug=False):
         self.debug = debug
         self.parser = yacc.yacc(
-                start='statements', optimize=not debug, debug=False,
+                start='tokens', optimize=not debug, debug=False,
                 tabmodule='hisp.tables.parsetab', write_tables=False)
 
     def parse(self, data):
@@ -165,7 +165,7 @@ def generate_tables():
         lextab='lextab',
         optimize=True)
     yacc.yacc(
-        start='statements',
+        start='tokens',
         outputdir='tables',
         optimize=True,
         debug=False)
