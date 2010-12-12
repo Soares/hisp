@@ -1,6 +1,5 @@
 from hisp.doctypes import HTML, XHTML, DJANGO
 from hisp.libraries.core import macros as core
-from hisp.exceptions import ConversionError
 from hisp.parse import Parser
 from hisp.libraries import load
 
@@ -36,7 +35,8 @@ class Hisp:
         return u''.join(map(self.eval, nodes))
 
     def eval(self, value):
-        from nodes import Node
+        from hisp.nodes import Node
+        from hisp.exceptions import reraise
         if isinstance(value, unicode):
             return value
         if isinstance(value, basestring):
@@ -45,15 +45,15 @@ class Hisp:
             return value.eval(self)
         try:
             return self.join(map(self.eval, value))
-        except TypeError as e:
-            raise
-            raise ConversionError("Can't evaluate unrecognized element '%s'" % value)
+        except TypeError:
+            reraise("Can't evaluate unrecognized element '%s' % value")
 
     def macro(self, name):
+        from hisp.exceptions import MacroNotFound
         for library in self.libraries:
             if name in library:
                 return library[name]
-        raise ConversionError('Unrecognized Macro: %s' % name)
+        raise MacroNotFound("no such macro '%s'" % name)
 
     def convert(self, input):
         return self.eval(self.parse(input))

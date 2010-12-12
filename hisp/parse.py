@@ -22,8 +22,26 @@ def plist(p):
     return lst
 
 def p_error(p):
-    from hisp.exceptions import ConversionError
-    raise ConversionError('Error parsing at %s' % yacc.token())
+    name = {
+        'DJANGO_COMMENT': 'django comment',
+        'HTML_COMMENT': 'html comment',
+        'DOCTYPE': 'doctype declaration',
+        'OP_ATTR': 'attribute',
+        'OP_CLOSER': ')',
+        'OP_MACRO': 'macro',
+        'OP': 'tag',
+        'OB_BLOCK': 'block',
+        'EXTEND': '~',
+        'CB': '}',
+        'CP': '(',
+        'VARIABLE': 'django variable',
+        'CLASS': 'class attribute',
+        'ID': 'id attribute',
+        'NAME': 'word',
+        'STRING': 'string',
+        'SYMBOLS': 'text',
+    }[p.type]
+    raise SyntaxError("Unexpected %s at line %s: '%s'" % (name, p.lineno, p.value))
 
 # Top Level Elements :::1
 

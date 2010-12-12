@@ -33,6 +33,10 @@ class Tokenizer:
         'SYMBOLS',
     )
 
+    def t_newline(self, t):
+        r'\n+'
+        t.lexer.lineno += len(t.value)
+
     def t_ignore_COMMENT(self, t):
         r'\{!([^}\\]|\\.)*\}'
         pass
@@ -113,10 +117,9 @@ class Tokenizer:
         return t
 
     def t_error(self, t):
-        from hisp.exceptions import ConversionError
-        raise ConversionError("Illegal Character '%s'" % t.value[0])
+        raise SyntaxError(t)
 
-    t_ignore = ' \t\n'
+    t_ignore = ' \t'
 
     def __init__(self, debug=False):
         self.debug = debug

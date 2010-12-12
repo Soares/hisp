@@ -41,7 +41,7 @@ class Doctype(Atom):
         self.value = value.strip().lower()
 
     def eval(self, hisp):
-        from hisp.exceptions import ConversionError
+        from hisp.exceptions import SyntaxError
         from hisp.doctypes import DOCTYPES, FILETYPES
         import re
         consider = FILETYPES[hisp.filetype]
@@ -52,7 +52,7 @@ class Doctype(Atom):
                     if filetype in FILETYPES:
                         hisp.setf(filetype)
                     return re.sub(regex, doctype, self.value)
-        raise ConversionError('Unrecognized Doctype: "%s"' % self.value)
+        raise SyntaxError('Unrecognized Doctype: "%s"' % self.value)
 
 
 
