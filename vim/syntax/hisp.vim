@@ -29,7 +29,7 @@ syn region hispLiteral start=+'+ end=+'+ skip="\\\\\|\\\'" contains=hispEscapeLi
 
 syn region hispElem matchgroup=hispElemColor start="(\s*\(#\@=\|\.\@=\|\w\|-\)\+" end=")" contains=hispAttribute,hispBlock,hispElem,hispMacro,hispLiteral,hispString,hispVariable,hispWord,hispClass,hispId,hispHtmlComment,hispDjangoComment,hispCloser
 syn region hispCloser matchgroup=hispElemColor start="(\/\s*\(#\@=\|\.\@=\|\w\|-\)\+" end=")" contains=hispAttribute,hispClass,hispId,hispDjangoComment
-syn region hispBlock start="{%" end="}" contains=hispBlockExtend,hispString,hispLiteral,hispHtmlComment,hispDjangoComment
+syn region hispBlock start="{%" end="}" skip="\\\\\|\\}\|\\\~" contains=hispEscapeVar,hispEscapeExt,hispBlockExtend,hispString
 syn region hispMacro matchgroup=hispMacroColor start="(%\s*\(\w\|-\)\+" end=")" contains=hispMacroExtend,hispAttribute,hispElem,hispCloser,hispBlock,hispVariable,hispHtmlComment,hispDjangoComment
 
 syn region hispBlockExtend matchgroup=hispExtend start="\~" end="}\@=" contained contains=hispLiteral,hispString,hispBlock,hispElem,hispCloser,hispMacro,hispVariable,hispDoctype,hispComment
@@ -42,6 +42,7 @@ syn match hispId "\s\@<!#\(\w\|-\)\+" contained containedin=hispElemColor
 syn match hispEscapeStr +\(\\"\|\\\\\)+ contained
 syn match hispEscapeLit +\(\\'\|\\\\\)+ contained
 syn match hispEscapeVar +\(\\}\|\\\\\)+ contained
+syn match hispEscapeExt +\(\\\~\|\\\\\)+ contained
 
 hi def link hispWord Normal
 hi def link hispClass PreProc
@@ -58,10 +59,11 @@ hi def link hispStrVariable Constant
 hi def link hispAttrParens Type
 hi def link hispAttribute Constant
 
-hi def link hispExtend Special
+hi def link hispExtend Statement
 hi def link hispEscapeStr Special
 hi def link hispEscapeVar Special
 hi def link hispEscapeLit Special
+hi def link hispEscapeExt Special
 
 hi def link hispString String
 hi def link hispLiteral String
