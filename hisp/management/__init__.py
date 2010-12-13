@@ -4,7 +4,7 @@ from hisp.doctypes import DJANGO, FILETYPES
 from hisp import Hisp
 
 
-def hisper(filetype=None, debug=False, libraries=None):
+def hisper(filetype=None, debug=False, compress=False, libraries=None):
     if filetype is None and 'django_html' in settings.INSTALLED_APPS:
         filetype = DJANGO
     elif filetype is None:
@@ -17,4 +17,7 @@ def hisper(filetype=None, debug=False, libraries=None):
         libraries = getattr(settings, 'HISP_LIBRARIES', (
             'hisp.libraries.django.macros',
         ))
-    return Hisp(filetype=filetype, debug=debug, libraries=libraries)
+    return Hisp(filetype=filetype,
+            debug=debug,
+            compress=compress,
+            libraries=libraries)

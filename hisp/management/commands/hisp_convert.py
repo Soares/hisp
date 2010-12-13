@@ -18,6 +18,9 @@ class Command(BaseCommand):
     """
 
     option_list = BaseCommand.option_list + (
+        make_option('-c', '--compress',
+            action='store_true', dest='compress', default=False,
+            help='Compress the output'),
         make_option('-a', '--apps',
             action='store_true', dest='apps', default=False,
             help='Converts hisp files found in APP_DIRECTORIES as well'),
@@ -33,7 +36,7 @@ class Command(BaseCommand):
         directories = chain(*filter(bool, (
             kwargs['fs'] and settings.TEMPLATE_DIRS,
             kwargs['apps'] and app_template_dirs)))
-        hisp = hisper()
+        hisp = hisper(kwargs['compress'])
 
         for dir in set(directories):
             for (root, _, files) in os.walk(dir):
