@@ -13,7 +13,8 @@ class Tokenizer:
         'CLOSER':           'self-closing element', # Statement, Head
         'MACRO':            'macro',                # Statement, Head
         'ELEM':             'tag',                  # Statement, Head
-        'BLOCK':            'block',                # Statement, Head
+        'OPEN_BLOCK':       'block',                # Statement, Head
+        'CLOSED_BLOCK':     'block',                # Statement, Contained
         'CB':               "'}'",                  # Literal
         'CP':               "')'",                  # Literal
         'VARIABLE':         'django variable',      # Constant, Contained
@@ -26,7 +27,7 @@ class Tokenizer:
     }
     tokens = tuple(token_names)
 
-    # Lex Constants ####################################################{{{1
+    # Lex Constants #####################################################}}}{{{1
     # Ignored Characters, Line Counting, and Error Handling
 
     @token(r'\n+')
@@ -38,7 +39,7 @@ class Tokenizer:
 
     t_ignore = ' \t'
 
-    # Comments #########################################################{{{1
+    # Comments ##########################################################}}}{{{1
     # Hisp, Django, and HTML style
 
     # HISP COMMENT: Contained Comment
@@ -72,7 +73,7 @@ class Tokenizer:
         t.value = nodes.HtmlComment(t.value[2:-1])
         return t
 
-    # Statements ########################################################}}}{{{1
+   # Statements ########################################################}}}{{{1
     # Doctypes, Elements, Closing Elements, Blocks, and Macros
 
     # DOCTYPE: Contained Statement
@@ -104,15 +105,25 @@ class Tokenizer:
         return t
 
 
-    # DJANGO BLOCK: Statement Head
+    # DJANGO BLOCK, OPEN: Statement Head
     # We do not enforce that string literals be closed within the block
     @token(r"""
     \{%             # Bracket Percent
     ([^~}\\]|\\.)+  # Anything except unescaped ~}\ characters
-    [~}]            # Either a ~ or a }""")
-    def t_BLOCK(self, t):
-        closed = t.value.endswith('}')
-        t.value = nodes.Block(t.value[2:-1], closed, t.lexer.lineno)
+    ~               # Ends with a ~""")
+    def t_OPEN_BLOCK(self, t):
+        t.value = nodes.Block(t.value[2:-1], t.lexer.lineno)
+        return t
+
+
+    # DJANGO BLOCK, CLOSED: Contained Statement
+    # We do not enforce that string literals be closed within the block
+    @token(r"""
+    \{%             # Bracket Percent
+    ([^~}\\]|\\.)+  # Anything except unescaped ~}\ characters
+    \}              # Ends with a }""")
+    def t_CLOSED_BLOCK(self, t):
+        t.value = nodes.Block(t.value[2:-1], t.lexer.lineno)
         return t
 
 
@@ -188,7 +199,7 @@ class Tokenizer:
     \(:              # Paren Colin
     \s*[\w-:]+       # A word, including hyphens and colins""")
     def t_ATTR(self, t):
-        t.value = nodes.Attribute(t.value[2:])
+        t.value = t.value[2:]
         return t
 
 
@@ -202,9 +213,7 @@ class Tokenizer:
     [\w-:]+         # A word, hyphens and colins allowed""")
     @token(r'(?<!\s)\.([\w-]+)')
     def t_CLASS(self, t):
-        attr = nodes.Attribute('class')
-        attr.set_value(t.value[1:])
-        t.value = attr
+        t.value = ('class', t.value[1:])
         return t
 
 
@@ -217,9 +226,7 @@ class Tokenizer:
     \#              # A hash
     [\w-:]+         # A word, hyphens and colins allowed""")
     def t_ID(self, t):
-        attr = nodes.Attribute('id')
-        attr.set_value(t.value[1:])
-        t.value = attr
+        t.value = ('id', t.value[1:])
         return t
 
     # WORD: Unbroken text
