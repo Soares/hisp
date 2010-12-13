@@ -133,7 +133,7 @@ class Macro(Node):
         self.name = name.upper()
         self.lineno = lineno
         self.args, self.kwargs, self.attrs = None, None, None
-        self.children = ()
+        self.children = []
 
     def set_css_attrs(self, attrs):
         self.attrs = attrs
@@ -148,7 +148,7 @@ class Macro(Node):
         self.attrs.update(attrs)
 
     def set_children(self, children):
-        self.children = children
+        self.children = list(children)
 
     def __repr__(self):
         return u'Macro(%s)' % self.name
@@ -214,8 +214,15 @@ class Value(Node):
 # Item Sets :::1
 
 class Attributes(Node, dict):
-    def add(self, attribute):
-        self.setdefault(attribute.name, set()).add(attribute.value)
+    def add(self, *args):
+        if len(args) not in (1, 2):
+            raise TypeError('Attributes.add must be given either an attribute or a (name, value) pair')
+        if len(args) is 1:
+            attribute, = args
+            attr, val = attribute.name, attribute.value
+        else:
+            attr, val = args
+        self.setdefault(attr, set()).add(val)
 
     def merge(self, key, values):
         self.setdefault(key, set()).update(values)

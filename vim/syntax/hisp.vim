@@ -28,13 +28,13 @@ syn region hispDoctype start="(\~" end=")"
 syn region hispString start=+"+ end=+"+ skip="\\\\\|\\\"" contains=hispStrVariable,hispEscapeStr,@Spell
 syn region hispLiteral start=+'+ end=+'+ skip="\\\\\|\\\'" contains=hispEscapeLit,@Spell
 syn region hispCdata keepend start="<" end=">" skip="\\\\\|\\>" contains=hispEscapeBrak
-syn region hispJavaScript keepend matchgroup=hispBrackets start="<{!\(js\|javascript\)}" end=">" skip="\\\\\|\\>" contains=hispEscapeBrak,@htmlJavascript
-syn region hispCss keepend matchgroup=hispBrackets start="<{!css}" end=">" contains=hispEscapeBrak,@htmlCss
 
 syn region hispElem matchgroup=hispElemColor start="(\s*\(#\@=\|\.\@=\|\w\|-\)\+" end=")" contains=hispCdata,hispAttribute,hispBlock,hispElem,hispMacro,hispLiteral,hispString,hispVariable,hispWord,hispClass,hispId,hispHtmlComment,hispDjangoComment,hispCloser,hispJavaScript,hispCss
 syn region hispCloser matchgroup=hispElemColor start="(\/\s*\(#\@=\|\.\@=\|\w\|-\)\+" end=")" contains=hispAttribute,hispClass,hispId,hispDjangoComment
 syn region hispBlock start="{%" end="}" skip="\\\\\|\\}\|\\\~" contains=hispEscapeVar,hispEscapeExt,hispBlockExtend,hispString,hispCdata
 syn region hispMacro matchgroup=hispMacroColor start="(%\s*\(\w\|-\)\+" end=")" contains=hispMacroExtend,hispAttribute,hispElem,hispCloser,hispBlock,hispVariable,hispHtmlComment,hispDjangoComment,hispCdata
+syn region hispJavaScript keepend matchgroup=hispBrackets start="(%javascript\s\+<" end=">\s*)" skip="\\\\\|\\>" contains=hispEscapeBrak,@htmlJavascript
+syn region hispCss keepend matchgroup=hispBrackets start="(%css\s\+<" end=">\s*)" contains=hispEscapeBrak,@htmlCss
 
 syn region hispBlockExtend matchgroup=hispExtend start="\~" end="}\@=" contained contains=hispLiteral,hispString,hispBlock,hispElem,hispCloser,hispMacro,hispVariable,hispDoctype,hispComment,hispCdata
 syn region hispMacroExtend matchgroup=hispExtend start="\~" end=")\@=" contained contains=hispLiteral,hispString,hispBlock,hispElem,hispCloser,hispMacro,hispAttribute,hispVariable,hispComment,hispCdata
