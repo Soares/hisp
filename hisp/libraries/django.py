@@ -1,11 +1,12 @@
 from ..macros import Library
 macros = Library()
 
+def url(arg):
+    return '{%%url %s%%}' % arg[1:] if arg.startswith('%') else arg
+
 @macros.register
 def internal(node, action=None):
-    if action and action.startswith('%'):
-        action = '{% url "%s" }' % action
-    action and node.attrs.add('action', action)
+    action and node.attrs.add('action', url(action))
     node.attrs.add('method', 'post')
     node.prepend('{%csrf_token%}')
     return node.render('form')
