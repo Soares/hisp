@@ -28,7 +28,7 @@ class BoundMacro:
         self.name = name
         self.attrs = attrs
         self.children = children
-        return self.fn(self, arg)
+        return self.fn(self) if arg is None else self.fn(self, arg)
 
     def append(self, child):
         self.children.append(child)

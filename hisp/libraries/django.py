@@ -2,8 +2,11 @@ from hisp.macros import Library
 macros = Library()
 
 @macros.register
-def internal(node, *args, **kwargs):
-    node.use(args, kwargs)
+def internal(node, action=None):
+    if action and action.startswith('%'):
+        action = '{% url "%s" }' % action
+    action and node.attrs.add('action', action)
+    node.attrs.add('method', 'post')
     node.prepend('{%csrf_token%}')
     return node.render('form')
 
