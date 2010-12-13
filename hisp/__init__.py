@@ -5,7 +5,9 @@ from .parse import Parser
 
 
 class Hisp:
-    def __init__(self, filetype=None, debug=False, libraries=None):
+    def __init__(self, filetype=None, debug=False, compress=False,
+            libraries=None):
+        self.compress = compress
         self.filetype = filetype
         self.libraries = tuple(map(load, libraries or ())) + (core,)
         self.parse = Parser(debug).parse
@@ -29,6 +31,8 @@ class Hisp:
         return u' '.join(map(self.eval, nodes))
 
     def chain(self, *nodes):
+        if self.compress:
+            return self.eval(nodes)
         return u'\n'.join(map(self.eval, nodes))
 
     def eval(self, value):
@@ -48,6 +52,8 @@ class Hisp:
     def indent(self, nodes, tab='\t'):
         if not nodes:
             return ''
+        if self.compress:
+            return self.chain(*nodes)
         body = self.chain(*nodes)
         return tab + ('\n' + tab).join(body.split('\n'))
 

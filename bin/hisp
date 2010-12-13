@@ -16,6 +16,9 @@ option_list = (
     make_option('-o',
         action='store', type='string', dest='outfile', default=False,
         help='The destination for output'),
+    make_option('-c', '--compress',
+        action='store_true', dest='compress', default=False,
+        help='Compress the output'),
     make_option('-p', '--path',
         action='store', type='string', dest='path', default=None,
         help="The path to a hisp install, if it's not on the sys path"),
@@ -56,7 +59,10 @@ def main():
     }.get(options.filetype)
     libraries = options.libraries or None
     debug = options.debug
-    hisp = Hisp(filetype=filetype, debug=debug, libraries=libraries)
+    hisp = Hisp(filetype=filetype,
+        debug=options.debug,
+        compress=options.compress,
+        libraries=libraries)
 
     with open(filename) as source:
         input = source.read()
