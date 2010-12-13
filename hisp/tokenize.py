@@ -153,7 +153,7 @@ class Tokenizer:
     # Literal strings will be passed untouched to output
     @token(r"""
     '               (?# Opening Single Quote)
-    ([^'\\]|\\.)*   (?# Anything except unescaped ' or \)
+    ([^'\\]|\\.)*   (?# Anything except unescaped \ or ')
     '               (?# Closing Single Quote)""")
     def t_LITERAL(self, t):
         t.value = nodes.Literal(t.value[1:-1])
@@ -165,9 +165,10 @@ class Tokenizer:
     # {{django}} form for output
     @token(r"""
     "               (?# Opening Quote)
-    ([^"\\]|\\.)*   (?# Anything except unescaped " or \)
+    ([^"\\]|\\.)*   (?# Anything except unescaped \ or ")
     "               (?# Closing Quote)""")
     def t_STRING(self, t):
+        print 'STRING', t.value
         t.value = nodes.String(t.value[1:-1])
         return t
 
@@ -177,7 +178,7 @@ class Tokenizer:
     # except that escaped characters (\\ and \}) will be unescaped.
     @token(r"""
     \{              (?# Open Bracket)
-    ([^}\\]|\\.)*   (?# Anything except unescaped } or \)
+    ([^}\\]|\\.)*   (?# Anything except unescaped \ or })
     \}              (?# Close Bracket)""")
     def t_VARIABLE(self, t):
         t.value = nodes.Variable(t.value[1:-1])
@@ -187,7 +188,7 @@ class Tokenizer:
     # CDATA: Contained Constant
     @token(r"""
     <               (?# Opening Angle Bracket)
-    ([^>\\]|\\.)*   (?# Anything except unescaped > or \)
+    ([^>\\]|\\.)*   (?# Anything except unescaped \ or >)
     >               (?# Closing angle bracket)""")
     def t_CDATA(self, t):
         t.value = nodes.CData(t.value[1:-1])
