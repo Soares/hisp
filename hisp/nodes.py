@@ -48,7 +48,15 @@ class String(Literal):
         return u'"%s"' % self.value
 
     def eval(self, hisp):
-        return self.render(self.variable.sub(r'{{\1}}', self.value), '"')
+        return self.render(self.variable.sub(r'{{\1}}', self.value), '"{')
+
+
+class CData(Literal):
+    def __repr__(self):
+        return "<%s>" % self.value
+
+    def eval(self, hisp):
+        return '<[CDATA[%s]]>' % self.render(self.value, '>')
 
 
 class HtmlComment(Atom):

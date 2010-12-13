@@ -92,7 +92,7 @@ def p_body_empty():
 
 # Object Groups :::1
 
-@parser('word : WORD | STRING | LITERAL')
+@parser('word : WORD | STRING | LITERAL | CDATA')
 def p_word(part):
     return part
 
