@@ -4,7 +4,7 @@ macros = Library()
 @macros.register('if')
 def conditional(node, arg):
     head = '<!--[if %s]>' % arg
-    body = node.join(node.children)
+    body = node.indent(node.children)
     tail = '<![endif]-->'
     return node.chain(head, body, tail)
 

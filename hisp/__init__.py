@@ -29,10 +29,7 @@ class Hisp:
         return u' '.join(map(self.eval, nodes))
 
     def chain(self, *nodes):
-        return self.join(nodes)
-
-    def join(self, nodes):
-        return u''.join(map(self.eval, nodes))
+        return u'\n'.join(map(self.eval, nodes))
 
     def eval(self, value):
         from .nodes import Node
@@ -44,9 +41,15 @@ class Hisp:
         if isinstance(value, Node):
             return value.eval(self)
         try:
-            return self.join(map(self.eval, value))
+            return ''.join(map(self.eval, value))
         except TypeError:
             reraise("Can't evaluate unrecognized element '%s' % value")
+
+    def indent(self, nodes, tab='\t'):
+        if not nodes:
+            return ''
+        body = self.chain(*nodes)
+        return tab + ('\n' + tab).join(body.split('\n'))
 
     def macro(self, name):
         for library in self.libraries:
@@ -55,4 +58,4 @@ class Hisp:
         raise KeyError
 
     def convert(self, input):
-        return self.eval(self.parse(input))
+        return self.chain(*self.parse(input))

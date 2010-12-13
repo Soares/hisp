@@ -23,7 +23,12 @@ def link(node, label):
 
 @macros.register
 def addto(node, name):
-    head = '{%%block %s%%}{{block.super}}' % name
-    body = node.join(node.children)
+    head = '{%%block %s%%}' % name
+    node.prepend('{{block.super}}')
+    from ..nodes import Block
+    if Block.INDENT:
+        body = node.indent(node.children)
+    else:
+        body = node.chain(*node.children)
     tail = '{%endblock%}'
     return node.chain(head, body, tail)

@@ -116,8 +116,10 @@ class Elem(Node):
         head = hisp.separate(tag, attrs) if attrs else tag
         if children is None:
             return u'<%s>' % hisp.close(head)
-        body = hisp.join(children)
-        return hisp.chain(u'<%s>' % head, body, u'</%s>' % tag)
+        body = hisp.indent(children)
+        if body:
+            return hisp.chain(u'<%s>' % head, body, u'</%s>' % tag)
+        return u'<%s></%s>' % (head, tag)
 
     def __init__(self, tag, lineno):
         self.tag = tag.strip() or None
@@ -175,6 +177,8 @@ class Macro(Node):
 
 
 class Block(Node):
+    INDENT = False
+
     def __init__(self, head, lineno):
         self.name = head.strip().split()[0]
         self.head = Atom.render(head, '~}"')
@@ -189,8 +193,13 @@ class Block(Node):
     def eval(self, hisp):
         if self.children is None:
             return u'{%%%s%%}' % self.head
-        body = hisp.join(self.children)
-        return u'{%%%s%%}%s{%%end%s%%}' % (self.head, body, self.name)
+        head = u'{%%%s%%}' % self.head
+        if self.INDENT:
+            body = hisp.indent(self.children)
+        else:
+            body = hisp.chain(*self.children)
+        end = u'{%%end%s%%}' % self.name
+        return hisp.chain(head, body, end)
 
 # SubExpressions ####################################################}}}{{{1
 # Attributes, Body
@@ -247,4 +256,4 @@ class Value(Node):
         self.text.insert(0, text)
 
     def eval(self, hisp):
-        return hisp.join(self.text)
+        return u''.join(hisp.eval(self.text))

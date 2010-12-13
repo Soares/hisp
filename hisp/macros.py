@@ -22,7 +22,7 @@ class BoundMacro:
         self.fn = fn
 
     def __call__(self, hisp, name, arg, attrs, children):
-        for proxy in ['join', 'separate', 'chain', 'close', 'flag']:
+        for proxy in ['indent', 'separate', 'chain', 'close', 'flag']:
             setattr(self, proxy, getattr(hisp, proxy))
         self.hisp = hisp
         self.name = name
