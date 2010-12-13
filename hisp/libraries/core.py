@@ -1,4 +1,4 @@
-from hisp.macros import Library
+from ..macros import Library
 macros = Library()
 
 @macros.register('if')

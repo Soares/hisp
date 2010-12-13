@@ -1,7 +1,7 @@
-from hisp.doctypes import HTML, XHTML, DJANGO
-from hisp.libraries.core import macros as core
-from hisp.parse import Parser
-from hisp.libraries import load
+from .doctypes import HTML, XHTML, DJANGO
+from .libraries.core import macros as core
+from .libraries import load
+from .parse import Parser
 
 
 class Hisp:
@@ -35,8 +35,8 @@ class Hisp:
         return u''.join(map(self.eval, nodes))
 
     def eval(self, value):
-        from hisp.nodes import Node
-        from hisp.exceptions import reraise
+        from .nodes import Node
+        from .exceptions import reraise
         if isinstance(value, unicode):
             return value
         if isinstance(value, basestring):

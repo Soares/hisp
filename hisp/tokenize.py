@@ -1,5 +1,6 @@
 from ply.lex import TOKEN as token, lex
-import nodes
+from .exceptions import HispError
+from . import nodes
 import re
 
 
@@ -39,15 +40,17 @@ class Tokenizer:
 
     t_ignore = ' \t'
 
+    FLAGS = 0
+
     # Comments ##########################################################}}}{{{1
     # Hisp, Django, and HTML style
 
     # HISP COMMENT: Contained Comment
     # Hisp comments are pre-processed out
     @token(r"""
-    \{!              # Braket Bang
-    ([^}\\]|\\.)*    # Anything but unescaped brackets or slashes
-    \}               # Closing Bracket""")
+    \{!              (?# Bracket Bang)
+    ([^}\\]|\\.)*    (?# Anything but unescaped brackets or slashes)
+    \}               (?# Closing Bracket)""")
     def t_ignore_COMMENT(self, t):
         pass
 
@@ -55,9 +58,9 @@ class Tokenizer:
     # DJANGO COMMENT: Contained Comment
     # Django comments will be converted to {# django comments #}
     @token(r"""
-    \{\#             # Bracket Hash
-    ([^}\\]|\\.)*    # Anything but unescaped brackets or slashes
-    \}               # Closing Bracket""")
+    \{\#             (?# Bracket Hash)
+    ([^}\\]|\\.)*    (?# Anything but unescaped brackets or slashes)
+    \}               (?# Closing Bracket)""")
     def t_DJANGO_COMMENT(self, t):
         t.value = nodes.DjangoComment(t.value[2:-1])
         return t
@@ -66,9 +69,9 @@ class Tokenizer:
     # HTML COMMENT: Contained Comment
     # These will be converted to <!-- HTML Comments -->
     @token(r"""
-    \(!              # Paren Bang
-    ([^)\\]|\\.)*    # Anything but unescaped parens or slashes
-    \)               # Closing Paren""")
+    \(!              (?# Paren Bang)
+    ([^)\\]|\\.)*    (?# Anything but unescaped parens or slashes)
+    \)               (?# Closing Paren)""")
     def t_HTML_COMMENT(self, t):
         t.value = nodes.HtmlComment(t.value[2:-1])
         return t
@@ -78,18 +81,18 @@ class Tokenizer:
 
     # DOCTYPE: Contained Statement
     @token(r"""
-    \(~             # Paren Tilda
-    ([^)\\]|\\.)    # Anything but unescaped parens or slashes
-    \)              # Closing Paren""")
+    \(~             (?# Paren Tilda)
+    ([^)\\]|\\.)    (?# Anything but unescaped parens or slashes)
+    \)              (?# Closing Paren)""")
     def t_DOCTYPE(self, t):
         t.value = nodes.Doctype(t.value[2:-1])
         return t
 
 
     # ELEMENT: Statement Head
-    @token(r"""     # Nameless elements are allowed, as in (#id.class)
-    \(\s*           # Open Paren, whitespace
-    [\w-]*          # Maybe a tag name, hyphens allowed""")
+    @token(r"""     (?# Nameless elements are allowed, as in #id.class)
+    \(\s*           (?# Open Paren, whitespace)
+    [\w:-]*         (?# Maybe a tag name, hyphens and colins allowed)""")
     def t_ELEM(self, t):
         t.value = nodes.Elem(t.value[1:], t.lexer.lineno)
         return t
@@ -97,9 +100,9 @@ class Tokenizer:
 
     # CLOSING ELEMENT: Statement Head
     @token(r'\(/\s*[\w-]*')
-    @token(r"""     # Nameless elements are allowed, as in (#id.class)
-    \(/\s*          # Open Paren frontslash, whitespace
-    [\w-]*          # Maybe a tag name, hyphens allowed""")
+    @token(r"""     (?# Nameless elements are allowed, as in #id.class)
+    \(/\s*          (?# Open Paren frontslash, whitespace)
+    [\w-]*          (?# Maybe a tag name, hyphens allowed)""")
     def t_CLOSER(self, t):
         t.value = nodes.Elem(t.value[2:], t.lexer.lineno)
         return t
@@ -108,9 +111,9 @@ class Tokenizer:
     # DJANGO BLOCK, OPEN: Statement Head
     # We do not enforce that strings be closed within the block
     @token(r"""
-    \{%             # Bracket Percent
-    ([^~}\\]|\\.)+  # Anything except unescaped ~}\ characters
-    ~               # Ends with a ~""")
+    \{%             (?# Bracket Percent)
+    ([^~}\\]|\\.)+  (?# Anything except unescaped ~}\ characters)
+    ~               (?# Ends with a )~""")
     def t_OPEN_BLOCK(self, t):
         t.value = nodes.Block(t.value[2:-1], t.lexer.lineno)
         return t
@@ -119,9 +122,9 @@ class Tokenizer:
     # DJANGO BLOCK, CLOSED: Contained Statement
     # We do not enforce that strings be closed within the block
     @token(r"""
-    \{%             # Bracket Percent
-    ([^~}\\]|\\.)+  # Anything except unescaped ~}\ characters
-    \}              # Ends with a }""")
+    \{%             (?# Bracket Percent)
+    ([^~}\\]|\\.)+  (?# Anything except unescaped ~}\ characters)
+    \}              (?# Ends with a )}""")
     def t_CLOSED_BLOCK(self, t):
         t.value = nodes.Block(t.value[2:-1], t.lexer.lineno)
         return t
@@ -131,13 +134,12 @@ class Tokenizer:
     # A macro name can consist of any non-whitespace characters except one of:
     # {}()[].#~
     _macro = r"""
-    \(%\s*                  # Paren, Percent, Whitespace
-      ([^\s{}()\[\].#~]+)   # Match 1: Macro Name
-      (\[                   # Match 2: Macro Arg
-        (?:                 # Unbound Group
-          [^\]\\]|\\.)+     # Anything except unescaped ] or \
-       \])?                 # Arg is optional"""
-    _macro_regex = re.compile(_macro, re.VERBOSE | re.DOTALL)
+    \(%\s*                  (?# Paren, Percent, Whitespace)
+      ([^\s{}()\[\].#~]+)   (?# Match 1: Macro Name)
+      (\[                   (?# Match 2: Argument)
+      (?:[^\]\\]|\\.)+      (?# The arg can contain all but unescaped ]s or \s)
+      \])?                  (?# The argument is optional)"""
+    _macro_regex = re.compile(_macro, re.VERBOSE | FLAGS)
     @token(_macro)
     def t_MACRO(self, t):
         name, arg = self._macro_regex.match(t.value).groups()
@@ -150,9 +152,9 @@ class Tokenizer:
     # LITERAL STRING: Contained Constant
     # Literal strings will be passed untouched to output
     @token(r"""
-    '               # Opening Single Quote
-    ([^'\\]|\\.)*   # Anything except unescaped ' or \
-    '               # Closing Single Quote""")
+    '               (?# Opening Single Quote)
+    ([^'\\]|\\.)*   (?# Anything except unescaped ' or \)
+    '               (?# Closing Single Quote)""")
     def t_LITERAL(self, t):
         t.value = nodes.Literal(t.value[1:-1])
         return t
@@ -162,9 +164,9 @@ class Tokenizer:
     # Strings will convert django variables from {hisp} form to
     # {{django}} form for output
     @token(r"""
-    "               # Opening Quote
-    ([^"\\]|\\.)*   # Anything except unescaped " or \
-    "               # Closing Quote""")
+    "               (?# Opening Quote)
+    ([^"\\]|\\.)*   (?# Anything except unescaped " or \)
+    "               (?# Closing Quote)""")
     def t_STRING(self, t):
         t.value = nodes.String(t.value[1:-1])
         return t
@@ -174,9 +176,9 @@ class Tokenizer:
     # No evaluation is done on the contents of {django variables},
     # except that escaped characters (\\ and \}) will be unescaped.
     @token(r"""
-    \{              # Open Bracket
-    ([^}\\]|\\.)*   # Anything except unescaped } or \
-    \}              # Close Bracket""")
+    \{              (?# Open Bracket)
+    ([^}\\]|\\.)*   (?# Anything except unescaped } or \)
+    \}              (?# Close Bracket)""")
     def t_VARIABLE(self, t):
         t.value = nodes.Variable(t.value[1:-1])
         return t
@@ -184,9 +186,9 @@ class Tokenizer:
 
     # CDATA: Contained Constant
     @token(r"""
-    <               # Opening Angle Bracket
-    ([^>\\]|\\.)*   # Anything except unescaped > or \
-    >               # Closing angle bracket""")
+    <               (?# Opening Angle Bracket)
+    ([^>\\]|\\.)*   (?# Anything except unescaped > or \)
+    >               (?# Closing angle bracket)""")
     def t_CDATA(self, t):
         t.value = nodes.CData(t.value[1:-1])
         return t
@@ -197,8 +199,8 @@ class Tokenizer:
     # ATTRIBUTE: Subexpression Head
     # Allowed in elements and macros
     @token(r"""
-    \(:              # Paren Colin
-    \s*[\w-:]+       # A word, including hyphens and colins""")
+    \(:              (?# Paren Colin)
+    \s*[\w:-]+       (?# A word, including hyphens and colins)""")
     def t_ATTR(self, t):
         t.value = t.value[2:]
         return t
@@ -209,9 +211,9 @@ class Tokenizer:
     # Will be out-matched by 'WORD' in almost all situations,
     # except when preceded by a statement head
     @token(r"""
-    (?<!\s)         # Not preceeded by whitespace
-    \.              # A dot
-    [\w-:]+         # A word, hyphens and colins allowed""")
+    (?<!\s)         (?# Not preceeded by whitespace)
+    \.              (?# A dot)
+    [\w:-]+         (?# A word, hyphens and colins allowed)""")
     @token(r'(?<!\s)\.([\w-]+)')
     def t_CLASS(self, t):
         t.value = ('class', t.value[1:])
@@ -223,9 +225,9 @@ class Tokenizer:
     # Will be out-matched by 'WORD' in almost all situations,
     # except when preceded by a statement head
     @token(r"""
-    (?<!\s)         # Not preceeded by whitespace
-    \#              # A hash
-    [\w-:]+         # A word, hyphens and colins allowed""")
+    (?<!\s)         (?# Not preceeded by whitespace)
+    \#              (?# A hash)
+    [\w:-]+         (?# A word, hyphens and colins allowed)""")
     def t_ID(self, t):
         t.value = ('id', t.value[1:])
         return t
@@ -257,7 +259,15 @@ class Tokenizer:
         self.debug = debug
 
     def lexer(self, **kwargs):
+        if 'lextab' not in kwargs:
+            try:
+                from .tables import lextab
+            except ImportError as e:
+                raise HispError('Lexer tables not found. Try regenerating them.')
+            kwargs['lextab'] = lextab
         kwargs.setdefault('optimize', not self.debug)
-        kwargs.setdefault('lextab', 'hisp.tables.lextab')
-        #kwargs.setdefault('reflags', re.DOTALL)
+        kwargs.setdefault('reflags', self.FLAGS)
         return lex(module=self, **kwargs)
+
+    def generate_tables(self):
+        self.lexer(outputdir='tables', lextab='lextab', optimize=True)

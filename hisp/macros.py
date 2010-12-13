@@ -37,7 +37,7 @@ class BoundMacro:
         self.children.insert(0, child)
 
     def render(self, tag=None, attrs=None, children=None):
-        from nodes import Elem
+        from .nodes import Elem
         tag = self.name if tag is None else tag
         attrs = self.attrs if attrs is None else attrs
         children = self.children if children is None else children

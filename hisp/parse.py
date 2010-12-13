@@ -1,6 +1,7 @@
 from ply import yacc
-import nodes
-from hisp.tokenize import Tokenizer
+from . import nodes
+from .tokenize import Tokenizer
+from .exceptions import HispError
 tokens = Tokenizer.tokens
 
 # Parser Functions #################################################{{{1
@@ -125,28 +126,21 @@ def p_word(part):
 class Parser:
     def __init__(self, debug=False):
         self.debug = debug
-        self.parser = yacc.yacc(
-                start='tokens', optimize=not debug, debug=False,
-                tabmodule='hisp.tables.parsetab', write_tables=False)
 
     def parse(self, data):
+        try:
+            from .tables import parsetab
+        except ImportError:
+            raise HispError('Can not find parsing tables. Try regenerating them.')
         lexer = Tokenizer(self.debug).lexer()
+        parser = yacc.yacc(start='tokens',
+            optimize=not self.debug, debug=self.debug,
+            tabmodule=parsetab, write_tables=False)
         return self.parser.parse(data, lexer, debug=self.debug)
 
-# Table Regeneration ################################################}}}{{{1
-# Remove tables from the python path and call this to regenerate them
-
-def generate_tables():
-    Tokenizer(False).lexer(
-        outputdir='tables',
-        lextab='lextab',
-        optimize=True)
-    yacc.yacc(
-        start='tokens',
-        outputdir='tables',
-        optimize=True,
-        debug=False)
-
-
-if __name__ == '__main__':
-    generate_tables()
+    def generate_tables(self):
+        yacc.yacc(
+            start='tokens',
+            outputdir='tables',
+            optimize=True,
+            debug=False)

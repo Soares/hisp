@@ -1,4 +1,4 @@
-from hisp.exceptions import ParseError
+from .exceptions import ParseError
 import re
 
 # Base Class #######################################################{{{1
@@ -93,7 +93,7 @@ class Doctype(Node):
         self.value = value.strip().lower()
 
     def eval(self, hisp):
-        from hisp.doctypes import DOCTYPES, FILETYPES
+        from .doctypes import DOCTYPES, FILETYPES
         consider = FILETYPES[hisp.filetype]
         for filetype in consider:
             for (regex, doctype) in DOCTYPES[filetype].items():
@@ -159,7 +159,7 @@ class Macro(Node):
         return '(%%%s...)' % self.name
 
     def eval(self, hisp):
-        from hisp.exceptions import MacroNotFound
+        from .exceptions import MacroNotFound
         try:
             macro = hisp.macro(self.name)
         except KeyError:
