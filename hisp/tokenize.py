@@ -100,23 +100,26 @@ class Tokenizer:
         return t
 
 
+    _block = r"""
+    \{\s*%              (?# Bracket Percent)
+    (
+      [^~"}\\]|         (?# Normal characters)
+      \\.|              (?# Escaped characters)
+      "([^"\\]|\\.)*"   (?# Full strings)
+    )*"""
     # DJANGO BLOCK, OPEN: Statement Head
-    # We do not enforce that strings be closed within the block
-    @token(r"""
-    \{%             (?# Bracket Percent)
-    ([^~}\\]|\\.)+  (?# Anything except unescaped ~}\ characters)
-    ~               (?# Ends with a )~""")
+    # We enforce that strings be closed before block ending.
+    # Escape string characters if you want unbalanced strings.
+    @token(_block + r'~')
     def t_OPEN_BLOCK(self, t):
         t.value = nodes.Block(t.value[2:-1], t.lexer.lineno)
         return t
 
 
     # DJANGO BLOCK, CLOSED: Contained Statement
-    # We do not enforce that strings be closed within the block
-    @token(r"""
-    \{%             (?# Bracket Percent)
-    ([^~}\\]|\\.)+  (?# Anything except unescaped ~}\ characters)
-    \}              (?# Ends with a )}""")
+    # We enforce that strings be closed before block ending.
+    # Escape string characters if you want unbalanced strings.
+    @token(_block + r'\}')
     def t_CLOSED_BLOCK(self, t):
         t.value = nodes.Block(t.value[2:-1], t.lexer.lineno)
         return t
@@ -168,7 +171,7 @@ class Tokenizer:
     # No evaluation is done on the contents of {django variables},
     # except that escaped characters (\\ and \}) will be unescaped.
     @token(r"""
-    \{              (?# Open Bracket)
+    \{(?!\s*%)      (?# Open Bracket without following percent)
     ([^}\\]|\\.)*   (?# Anything except unescaped \ or })
     \}              (?# Close Bracket)""")
     def t_VARIABLE(self, t):

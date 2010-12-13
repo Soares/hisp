@@ -174,7 +174,7 @@ class Macro(Node):
 class Block(Node):
     def __init__(self, head, lineno):
         self.name = head.strip().split()[0]
-        self.head = Atom.render(head, "~}")
+        self.head = Atom.render(head, '~}"')
         self.children = None
 
     def set_children(self, children):
