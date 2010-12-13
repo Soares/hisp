@@ -89,15 +89,6 @@ class Tokenizer:
         return t
 
 
-    # ELEMENT: Statement Head
-    @token(r"""     (?# Nameless elements are allowed, as in #id.class)
-    \(\s*           (?# Open Paren, whitespace)
-    [\w:-]*         (?# Maybe a tag name, hyphens and colins allowed)""")
-    def t_ELEM(self, t):
-        t.value = nodes.Elem(t.value[1:], t.lexer.lineno)
-        return t
-
-
     # CLOSING ELEMENT: Statement Head
     @token(r'\(/\s*[\w-]*')
     @token(r"""     (?# Nameless elements are allowed, as in #id.class)
@@ -132,18 +123,27 @@ class Tokenizer:
 
     # MACRO: Statement Head
     # A macro name can consist of any non-whitespace characters except one of:
-    # {}()[].#~
+    # {}()[].#
     _macro = r"""
     \(%\s*                  (?# Paren, Percent, Whitespace)
-      ([^\s{}()\[\].#~]+)   (?# Match 1: Macro Name)
+      ([^\s{}()\[\].#]+)    (?# Match 1: Macro Name)
       (\[                   (?# Match 2: Argument)
-      (?:[^\]\\]|\\.)+      (?# The arg can contain all but unescaped ]s or \s)
+        (?:[^\]\\]|\\.)*    (?# The arg can contain all but unescaped ]s or \s)
       \])?                  (?# The argument is optional)"""
     _macro_regex = re.compile(_macro, re.VERBOSE | FLAGS)
     @token(_macro)
     def t_MACRO(self, t):
         name, arg = self._macro_regex.match(t.value).groups()
-        t.value = nodes.Macro(name[2:], arg, t.lexer.lineno)
+        t.value = nodes.Macro(name, arg, t.lexer.lineno)
+        return t
+
+
+    # ELEMENT: Statement Head
+    @token(r"""     (?# Nameless elements are allowed, as in #id.class)
+    \(\s*           (?# Open Paren, whitespace)
+    [\w:-]*         (?# Maybe a tag name, hyphens and colins allowed)""")
+    def t_ELEM(self, t):
+        t.value = nodes.Elem(t.value[1:], t.lexer.lineno)
         return t
 
     # Constants #########################################################}}}{{{1
