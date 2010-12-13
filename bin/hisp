@@ -63,7 +63,7 @@ def main():
 
     try:
         output = hisp.convert(input)
-    except (MacroNotFound, ParseError) as e:
+    except (MacroNotFound, ParseError, SyntaxError) as e:
         print e
         return
 
