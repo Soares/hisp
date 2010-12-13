@@ -77,7 +77,8 @@ class Tokenizer:
         return t
 
    # Statements ########################################################}}}{{{1
-    # Doctypes, Elements, Closing Elements, Blocks, and Macros
+    # Doctypes, Closing Elements, Blocks, and Macros
+    # Note that Element is a statement but is ambigous, so is found below
 
     # DOCTYPE: Contained Statement
     @token(r"""
@@ -137,16 +138,6 @@ class Tokenizer:
         t.value = nodes.Macro(name, arg, t.lexer.lineno)
         return t
 
-
-    # ELEMENT: Statement Head
-    @token(r"""     (?# Nameless elements are allowed, as in #id.class)
-    \(\s*           (?# Open Paren, whitespace)
-    (?![:%/!])      (?# Don't match attributes, macros, closers, or comments)
-    [\w:-]*         (?# Maybe a tag name, hyphens and colins allowed)""")
-    def t_ELEM(self, t):
-        t.value = nodes.Elem(t.value[1:], t.lexer.lineno)
-        return t
-
     # Constants #########################################################}}}{{{1
     # Literal Strings, Strings, Variables, and CDATA
 
@@ -169,7 +160,6 @@ class Tokenizer:
     ([^"\\]|\\.)*   (?# Anything except unescaped \ or ")
     "               (?# Closing Quote)""")
     def t_STRING(self, t):
-        print 'STRING', t.value
         t.value = nodes.String(t.value[1:-1])
         return t
 
@@ -197,6 +187,8 @@ class Tokenizer:
 
     # SubExpressions ####################################################}}}{{{1
     # Attributes, Classes, IDs, Words
+    # Note that Words are subexpressions but are ambiguous,
+    # and can thus be found below.
 
     # ATTRIBUTE: Subexpression Head
     # Allowed in elements and macros
@@ -234,16 +226,6 @@ class Tokenizer:
         t.value = ('id', t.value[1:])
         return t
 
-    # WORD: Unbroken text
-    # Words match any unbroken text except literals or constants
-    # Words have no concept of 'escaping' but 
-    # word"<>"word will be parsed as WORD, STRING, WORD which will
-    # be rendered as word<>word, so you can use strings like a
-    # poor man's escape characters
-    @token(r"""[^\s"'<>)}]+""")
-    def t_WORD(self, t):
-        return t
-
     # Literals ##########################################################}}}{{{1
     # Closing Parenthesis ')' or Brackets '}'
 
@@ -253,6 +235,33 @@ class Tokenizer:
 
     @token(r'\}')
     def t_CB(self, t):
+        return t
+
+    # Ambiguous Tokens ##################################################}}}{{{1
+    # Tokens that out-match other tokens if given the chance
+
+    # ELEMENT: Statement Head
+    # Could be made unambigous by adding a lookahead, but there's no need
+    # to incur that speed penalty.
+    # For the record, the lookahead necessary is below, and would go between
+    # the whitespace matching and the name matching
+    # (?![:%/!])      (?# Don't match attributes, macros, closers, or comments)
+    @token(r"""     (?# Nameless elements are allowed, as in #id.class)
+    \(\s*           (?# Open Paren, whitespace)
+    [\w:-]*         (?# Maybe a tag name, hyphens and colins allowed)""")
+    def t_ELEM(self, t):
+        t.value = nodes.Elem(t.value[1:], t.lexer.lineno)
+        return t
+
+
+    # WORD: Unbroken text
+    # Words match any unbroken text except literals or constants
+    # Words have no concept of 'escaping' but 
+    # word"<>"word will be parsed as WORD, STRING, WORD which will
+    # be rendered as word<>word, so you can use strings like a
+    # poor man's escape characters
+    @token(r"""[^\s"'<>)}]+""")
+    def t_WORD(self, t):
         return t
 
     # Tokenizer Methods #################################################}}}{{{1
