@@ -72,7 +72,7 @@ class String(Atom):
     variable = re.compile(r'\{((?:[^}\\]|\\.)*)\}')
 
     def expand(self, match):
-        return '{{%s}}' % unicode(Variable(match.group(1)))
+        return unicode(Variable(match.group(1)))
 
     def __init__(self, value):
         value = self.variable.sub(self.expand, value)
