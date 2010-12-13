@@ -2,7 +2,7 @@ HTML, XHTML, XML, DJANGO = 'HTML', 'XHTML', 'XML', 'DJANGO'
 import re
 
 def compile(filetype_dict):
-    return dict((re.compile('^%s$' % k), v) for (k, v) in dict.items())
+    return dict((re.compile('^%s$' % k), v) for (k, v) in filetype_dict.items())
 
 
 DOCTYPES = {
