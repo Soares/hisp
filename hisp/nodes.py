@@ -4,7 +4,7 @@ import re
 # Base Class #######################################################{{{1
 # All evaluatable objects should extend this
 
-class Node:
+class Node(object):
     def eval(self, hisp):
         return u''
 
@@ -32,6 +32,9 @@ class Atom(Node):
     def __init__(self, value):
         self.value = value
         self.rendered = self.PATTERN % self.render(self.value, self.ESCAPE)
+
+    def __repr__(self):
+        return self.rendered
 
     def __unicode__(self):
         return unicode(self.rendered)
@@ -61,10 +64,10 @@ class Literal(Atom):
     ESCAPE = "'"
 
     def __repr__(self):
-        return "'%s'" % unicode(self)
+        return "'%s'" % self.value
 
 
-class String(Literal):
+class String(Atom):
     ESCAPE = '"{'
     variable = re.compile(r'\{((?:[^}\\]|\\.)*)\}')
 
@@ -76,14 +79,14 @@ class String(Literal):
         return super(String, self).__init__(value)
 
     def __repr__(self):
-        return '"%s"' % unicode(self)
+        return '"%s"' % self.value
 
 
-class CData(Literal):
+class CData(Atom):
     PATTERN, ESCAPE = '<[CDATA[%s]]>', '>'
 
     def __repr__(self):
-        return "<%s>" % unicode(self)
+        return "<%s>" % self.value
 
 # Statements ########################################################}}}{{{1
 # Doctype, Element, Block, Macro
@@ -219,7 +222,7 @@ class Body:
         self.children.insert(0, child)
 
     def add_attr(self, attr):
-        self.attrs.add(attr)
+        self.attrs.add(*attr)
 
     def __repr__(self):
         return u'Body'

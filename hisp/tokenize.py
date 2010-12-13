@@ -127,9 +127,9 @@ class Tokenizer:
     _macro = r"""
     \(%\s*                  (?# Paren, Percent, Whitespace)
       ([^\s{}()\[\].#]+)    (?# Match 1: Macro Name)
-      (\[                   (?# Match 2: Argument)
+      (?:\[(                (?# Match 2: Argument)
         (?:[^\]\\]|\\.)*    (?# The arg can contain all but unescaped ]s or \s)
-      \])?                  (?# The argument is optional)"""
+      )\])?                 (?# The argument is optional)"""
     _macro_regex = re.compile(_macro, re.VERBOSE | FLAGS)
     @token(_macro)
     def t_MACRO(self, t):
@@ -141,6 +141,7 @@ class Tokenizer:
     # ELEMENT: Statement Head
     @token(r"""     (?# Nameless elements are allowed, as in #id.class)
     \(\s*           (?# Open Paren, whitespace)
+    (?![:%/!])      (?# Don't match attributes, macros, closers, or comments)
     [\w:-]*         (?# Maybe a tag name, hyphens and colins allowed)""")
     def t_ELEM(self, t):
         t.value = nodes.Elem(t.value[1:], t.lexer.lineno)
