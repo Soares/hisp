@@ -168,7 +168,10 @@ class Macro(Node):
         except KeyError:
             raise MacroNotFound(u"Can not find macro '%s' on line %d" % (
                 self.name, self.lineno))
-        return macro(hisp, self.name, self.arg, self.attrs, self.children)
+        try:
+            return macro(hisp, self.name, self.arg, self.attrs, self.children)
+        except Exception as e:
+            raise MacroNotFound('Error rendering macro %s: %s' % (self.name, e))
 
 
 class Block(Node):
