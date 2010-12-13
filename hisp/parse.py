@@ -136,7 +136,7 @@ class Parser:
         parser = yacc.yacc(start='tokens',
             optimize=not self.debug, debug=self.debug,
             tabmodule=parsetab, write_tables=False)
-        return self.parser.parse(data, lexer, debug=self.debug)
+        return parser.parse(data, lexer, debug=self.debug)
 
     def generate_tables(self):
         yacc.yacc(
