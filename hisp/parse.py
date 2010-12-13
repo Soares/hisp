@@ -1,6 +1,6 @@
 from ply import yacc
 import nodes
-from hisp.tokenize import Tokenizer, ERROR_MAP
+from hisp.tokenize import Tokenizer
 tokens = Tokenizer.tokens
 
 # Parser Functions #################################################{{{1
@@ -18,12 +18,11 @@ def parser(regex):
 def p_error(p):
     if not p:
         raise SyntaxError('Unexpected end of file.')
-    value = p.value
-    err = "Unexpected %s at line %s: '%s'" % (ERROR_MAP[p.type], p.lineno, value)
-    raise SyntaxError(err)
+    raise SyntaxError("Unexpected %s at line %s: '%s'" %
+            (Tokenizer.token_names[p.type], p.lineno, p.value))
 
 # Statements ########################################################}}}{{{1
-# Elements, Closing Elements, Blocks, and Macros
+# Elements, Blocks, and Macros
 
 @parser('element : ELEM css_attrs body CP')
 def p_element_open(elem, css_attrs, body, c):

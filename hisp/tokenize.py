@@ -106,7 +106,7 @@ class Tokenizer:
 
 
     # DJANGO BLOCK, OPEN: Statement Head
-    # We do not enforce that string literals be closed within the block
+    # We do not enforce that strings be closed within the block
     @token(r"""
     \{%             # Bracket Percent
     ([^~}\\]|\\.)+  # Anything except unescaped ~}\ characters
@@ -117,7 +117,7 @@ class Tokenizer:
 
 
     # DJANGO BLOCK, CLOSED: Contained Statement
-    # We do not enforce that string literals be closed within the block
+    # We do not enforce that strings be closed within the block
     @token(r"""
     \{%             # Bracket Percent
     ([^~}\\]|\\.)+  # Anything except unescaped ~}\ characters
@@ -145,10 +145,10 @@ class Tokenizer:
         return t
 
     # Constants #########################################################}}}{{{1
-    # String Literals, Strings, Variables, and CDATA
+    # Literal Strings, Strings, Variables, and CDATA
 
-    # STRING LITERAL: Contained Constant
-    # String literals will be passed untouched to output
+    # LITERAL STRING: Contained Constant
+    # Literal strings will be passed untouched to output
     @token(r"""
     '               # Opening Single Quote
     ([^'\\]|\\.)*   # Anything except unescaped ' or \
@@ -171,7 +171,8 @@ class Tokenizer:
 
 
     # VARIABLE: Contained Constant
-    # No evaluation is done on the contents of {django variables}
+    # No evaluation is done on the contents of {django variables},
+    # except that escaped characters (\\ and \}) will be unescaped.
     @token(r"""
     \{              # Open Bracket
     ([^}\\]|\\.)*   # Anything except unescaped } or \
