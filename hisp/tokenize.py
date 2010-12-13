@@ -159,9 +159,11 @@ class Tokenizer:
     # Strings will convert django variables from {hisp} form to
     # {{django}} form for output
     @token(r"""
-    "               (?# Opening Quote)
-    ([^"\\]|\\.)*   (?# Anything except unescaped \ or ")
-    "               (?# Closing Quote)""")
+    "(                  (?# Opening Quote)
+      [^"{\\]|          (?# Unescaped Character)
+      \\.|              (?# Escaped Character)
+      \{([^}\\]|\\.)*\} (?# Template Variable)
+    )*"                 (?# Closing Quote)""")
     def t_STRING(self, t):
         t.value = nodes.String(t.value[1:-1])
         return t
