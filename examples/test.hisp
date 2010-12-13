@@ -7,3 +7,5 @@
 (%internal (:action test) (abc) (def))
 (%internal[%test] (abc) (def))
 (%internal[test] (abc) (def))
+
+"I have a string. {there"s a var} with double quotes. Problem?"

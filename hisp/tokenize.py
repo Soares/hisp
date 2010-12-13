@@ -48,9 +48,9 @@ class Tokenizer:
     # HISP COMMENT: Contained Comment
     # Hisp comments are pre-processed out
     @token(r"""
-    \{!              (?# Bracket Bang)
-    ([^}\\]|\\.)*    (?# Anything but unescaped brackets or slashes)
-    \}               (?# Closing Bracket)""")
+    \{!                 (?# Bracket Bang)
+    ([^!\\]|\\.|![^}])* (?# Anything but unescaped brackets or slashes)
+    \!}                 (?# Closing Bang Bracket)""")
     def t_ignore_COMMENT(self, t):
         pass
 
@@ -58,22 +58,22 @@ class Tokenizer:
     # DJANGO COMMENT: Contained Comment
     # Django comments will be converted to {# django comments #}
     @token(r"""
-    \{\#             (?# Bracket Hash)
-    ([^}\\]|\\.)*    (?# Anything but unescaped brackets or slashes)
-    \}               (?# Closing Bracket)""")
+    \{\#                    (?# Bracket Hash)
+    ([^#\\]|\\.|\#[^}])*    (?# Anything but unescaped brackets or slashes)
+    \\#}                    (?# Closing Bracket)""")
     def t_DJANGO_COMMENT(self, t):
-        t.value = nodes.DjangoComment(t.value[2:-1])
+        t.value = nodes.DjangoComment(t.value[2:-2])
         return t
 
 
     # HTML COMMENT: Contained Comment
     # These will be converted to <!-- HTML Comments -->
     @token(r"""
-    \(!              (?# Paren Bang)
-    ([^)\\]|\\.)*    (?# Anything but unescaped parens or slashes)
-    \)               (?# Closing Paren)""")
+    \(!                 (?# Paren Bang)
+    ([^!\\]|\\.|![^}])* (?# Anything but unescaped parens or slashes)
+    \!)                 (?# Closing Paren)""")
     def t_HTML_COMMENT(self, t):
-        t.value = nodes.HtmlComment(t.value[2:-1])
+        t.value = nodes.HtmlComment(t.value[2:-2])
         return t
 
    # Statements ########################################################}}}{{{1

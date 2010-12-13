@@ -6,78 +6,93 @@
 " URL:	       http://hisp.natesoares.com
 
 " ---------------------------------------------------------------------
-"  Load Once: {{{1
-" For vim-version 5.x: Clear all syntax items
-" For vim-version 6.x: Quit when a syntax file was already loaded
 
 set ignorecase
 syn case ignore
 
 runtime! syntax/html.vim
-syn keyword hispTodo contained TODO FIXME XXX NOTE
 syn include @htmlJavaScript syntax/javascript.vim
 
-syn region hispNativeComment start="{!" end="}" contains=hispTodo containedin=hispDjangoComment,hispHtmlComment,hispVariable,hispStrVariable,hispDoctype,hispString,hispLiteral,hispElem,hispCloser,hispBlock,hispMacro,hispBlockExtend,hispMacroExtend,hispAttribute,hispWord,hispClass,hispId
-syn region hispDjangoComment start="{#" end="}" contains=hispTodo
-syn region hispHtmlComment start="(!" end=")" contains=hispTodo
-syn cluster hispComment contains=hispDjangoComment,hispHtmlComment
+syn keyword hispTodo contained TODO FIXME XXX NOTE
 
-syn region hispVariable matchgroup=hispVarBrackets start="{[!#%]\@!" end="}" skip="\\\\\|\\}" contains=hispTodo,hispEscapeVar
-syn region hispStrVariable matchgroup=hispVarBrackets start="{[!#%]\@!" end="}" skip="\\\\\|\\}" contains=hispTodo,hispEscapeVar,hispEscapeStr
+syn region hispNativeComment start="{!" end="!}" skip="\\\\\|\\!" keepend contains=hispTodo containedin=@hispAll
+syn region hispDjangoComment start="{#" end="#}" skip="\\\\\|\\#" contains=hispTodo
+syn region hispHtmlComment start="(!" end="!)" skip="\\\\\|\\!" contains=hispTodo
+syn cluster hispLiveComment contains=hispDjangoComment,hispHtmlComment
+syn cluster hispAll contains=@hispLiveComment
+
 syn region hispDoctype start="(\~" end=")"
-syn region hispString start=+"+ end=+"+ skip="\\\\\|\\\"" contains=hispStrVariable,hispEscapeStr,@Spell
-syn region hispLiteral start=+'+ end=+'+ skip="\\\\\|\\\'" contains=hispEscapeLit,@Spell
-syn region hispCdata keepend start="<" end=">" skip="\\\\\|\\>" contains=hispEscapeBrak
+syn region hispElement matchgroup=hispDelimTag start="(\s*\(#\@=\|\.\@=\|\w\|-\)\+" end=")" contains=hispAttribute,@hispConstant,@hispStatement
+syn region hispSelfCloser matchgroup=hispDelimTag start="(\/\s*\(#\@=\|\.\@=\|\w\|-\)\+" end=")" contains=hispAttribute,hispDjangoComment
+syn cluster hispTag contains=hispElement,hispSelfCloser
 
-syn region hispElem matchgroup=hispElemColor start="(\s*\(#\@=\|\.\@=\|\w\|-\)\+" end=")" contains=hispCdata,hispAttribute,hispBlock,hispElem,hispMacro,hispLiteral,hispString,hispVariable,hispWord,hispClass,hispId,hispHtmlComment,hispDjangoComment,hispCloser,hispJavaScript,hispCss
-syn region hispCloser matchgroup=hispElemColor start="(\/\s*\(#\@=\|\.\@=\|\w\|-\)\+" end=")" contains=hispAttribute,hispClass,hispId,hispDjangoComment
-syn region hispBlock start="{%" end="}" skip="\\\\\|\\}\|\\\~" contains=hispEscapeVar,hispEscapeExt,hispBlockExtend,hispString,hispCdata
-syn region hispMacro matchgroup=hispMacroColor start="(%\s*\(\w\|-\)\+" end=")" contains=hispMacroExtend,hispAttribute,hispElem,hispCloser,hispBlock,hispVariable,hispHtmlComment,hispDjangoComment,hispCdata
-syn region hispJavaScript keepend matchgroup=hispBrackets start="(%javascript\s\+<" end=">\s*)" skip="\\\\\|\\>" contains=hispEscapeBrak,@htmlJavascript
-syn region hispCss keepend matchgroup=hispBrackets start="(%css\s\+<" end=">\s*)" contains=hispEscapeBrak,@htmlCss
+syn region hispMacro matchgroup=hispDelimMacro start="(%\s*\(#\@=\|\.\@=\|\w\|-\)\+" end=")" contains=hispMacroExtend,hispAttribute,hispElem,hispCloser,hispBlock,hispVariable,hispHtmlComment,hispDjangoComment,hispCdata
+syn region hispJavaScript keepend matchgroup=hispNewlang start="(%javascript\s\+<" end=">\s*)" skip="\\\\\|\\>" contains=@htmlJavascript
+syn region hispCSS keepend matchgroup=hispNewlang start="(%css\s\+<" end=">\s*)" skip="\\\\\|\\>" contains=@htmlCss
+syn cluster hispMacros contains=hispMacro,hispJavaScript,hispCSS
 
-syn region hispBlockExtend matchgroup=hispExtend start="\~" end="}\@=" contained contains=hispLiteral,hispString,hispBlock,hispElem,hispCloser,hispMacro,hispVariable,hispDoctype,hispComment,hispCdata
-syn region hispMacroExtend matchgroup=hispExtend start="\~" end=")\@=" contained contains=hispLiteral,hispString,hispBlock,hispElem,hispCloser,hispMacro,hispAttribute,hispVariable,hispComment,hispCdata
-syn region hispAttribute matchgroup=hispAttrParens start="(:\(\w\|-\)\+" end=")" contained contains=hispDjangoComment
+syn region hispBlock start="{%" end="}" skip="\\\\\|\\}\|\\\~" contains=hispBlockExtend,hispString
+syn cluster hispStatement contains=hispDoctype,@hispLiveComment,@hispTag,@hispMacros
+syn cluster hispAll add=@hispStatement
 
-syn match hispWord "\s\@<=[^{(<"~ \t\n>)}]\+" contained
-syn match hispClass "\s\@<!\.\(\w\|-\)\+" contained containedin=hispElemColor
-syn match hispId "\s\@<!#\(\w\|-\)\+" contained containedin=hispElemColor
-syn match hispEscapeStr +\(\\"\|\\\\\)+ contained
-syn match hispEscapeLit +\(\\'\|\\\\\)+ contained
-syn match hispEscapeVar +\(\\}\|\\\\\)+ contained
-syn match hispEscapeExt +\(\\\~\|\\\\\)+ contained
-syn match hispEscapeBrak +\(\\>\|\\\\\)+ contained
+syn region hispBlockExtend matchgroup=hispDelimExtend start="\~" end="}\@=" contained contains=@hispConstant,@hispStatement
+syn region hispBlockString matchgroup=hispDelimExtend start="\~" end="}\@=" contained contains=@hispConstant,@hispStatement
+syn region hispString start=+"+ end=+"+ skip="\\\\\|\\\"" contains=hispVariable,@Spell
+syn region hispAttribute matchgroup=hispDelimAttr start="(:\(\w\|-\)\+" end=")" contained contains=@hispConstant,hispDjangoComment
 
-hi def link hispWord Normal
-hi def link hispClass PreProc
-hi def link hispId Identifier
+syn match hispClassAttr "\s\@<!\.\(\w\|-\)\+" contained containedin=@hispTag,@hispMacros
+syn match hispIdAttr "\s\@<!#\(\w\|-\)\+" contained containedin=@hispTag,@hispMacros
+syn cluster hispTagAttr contains=hispClassAttr,hispIdAttr
+syn cluster hispAll add=@hispTagAttr
 
-hi def link hispElemColor Statement
-hi def link hispMacroColor Identifier
-hi def link hispBlock PreProc
+syn region hispString start=+"+ end=+"+ skip="\\\\\|\\\"" contains=hispVariable,@Spell
+syn region hispLiteral start=+'+ end=+'+ skip="\\\\\|\\\'" contains=@Spell
+syn region hispCDATA start="<" end=">" skip="\\\\\|\\>"
+syn cluster hispText contains=hispString,hispLiteral,hispCDATA
 
-hi def link hispVarBrackets PreProc
-hi def link hispVariable Constant
-hi def link hispStrVariable Constant
+syn region hispVariable matchgroup=hispDelimVar start="{[!#%]\@!" end="}" skip="\\\\\|\\}"
+syn cluster hispDjango contains=hispDjangoComment,hispBlock,hispVariable
+syn cluster hispConstant contains=@hispText,hispVariable
+syn cluster hispAll add=@hispConstant
 
-hi def link hispAttrParens Type
-hi def link hispAttribute Constant
+syn match hispEscapeBang +\(\\!\|\\\\\)+ contained containedin=hispNativeComment,hispHtmlComment
+syn match hispEscapeHash +\(\\#\|\\\\\)+ contained containedin=hispDjangoComment
+syn match hispEscapeStr +\(\\"\|\\\\\)+ contained containedin=hispString,hispBlockString
+syn match hispEscapeLit +\(\\'\|\\\\\)+ contained containedin=hispLiteral
+syn match hispEscapeBrak +\(\\}\|\\\\\)+ contained containedin=hispVariable
+syn match hispEscapeParen +\(\\)\|\\\\\)+ contained containedin=hispVariable
+syn match hispEscapeBlock +\(\\}\|\\\~\|\\\\\)+ contained containedin=hispBlock
+syn match hispEscapeCDATA +\(\\>\|\\\\\)+ contained containedin=hispCDATA,hispJavaScript,hispCSS
+syn cluster hispEscape contains=hispEscapeStr,hispEscapeLit,hispEscapeVar,hispEscapeBlock,hispEscapeCDATA
 
-hi def link hispExtend Statement
-hi def link hispEscapeStr Special
-hi def link hispEscapeVar Special
-hi def link hispEscapeLit Special
-hi def link hispEscapeExt Special
-hi def link hispEscapeBrak Special
+hi! link hispTodo Todo
 
-hi def link hispString String
-hi def link hispLiteral String
-hi def link hispCdata String
-hi def link hispBrackets String
+hi! link hispClassAttr PreProc
+hi! link hispIdAttr Identifier
 
-hi def link hispDoctype Include
-hi def link hispHtmlComment PreProc
-hi def link hispDjangoComment Comment
-hi def link hispNativeComment Comment
-hi def link hispTodo Todo
+hi! link hispHtmlComment PreProc
+hi! link hispNativeComment Comment
+hi! link hispDjangoComment Comment
+
+hi! link hispDoctype PreProc
+hi! link hispDelimTag Statement
+hi! link hispDelimMacro Identifier
+hi! link hispBlock PreProc
+
+hi! link hispDelimAttr Type
+
+hi! link hispDelimVar PreProc
+hi! link hispString String
+hi! link hispLiteral String
+hi! link hispCDATA String
+
+hi! link hispAttrParens Type
+hi! link hispAttribute Constant
+
+hi! link hispDelimExtend Statement
+hi! link hispEscapeStr Special
+hi! link hispEscapeVar Special
+hi! link hispEscapeLit Special
+hi! link hispEscapeBlock Special
+hi! link hispEscapeCDATA Special
+hi! link hispEscape Special
