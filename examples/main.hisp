@@ -63,5 +63,5 @@
     (#layout (canvas#underlay))}
 
 {%load media}
-(%addto links ~ {%include_media "analyze.css"})
-(%addto scripts ~ {%include_media "analyze.js"})
+(%addto[links] {%include_media "analyze.css"})
+(%addto {%include_media "analyze.js"})

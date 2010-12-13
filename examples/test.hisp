@@ -1,9 +1,9 @@
-(~)
-(html
-  (head
-    (meta "charset")
-    (title "test"))
-  (body
-    (:class test)
-    (:class abc)
-    ))
+(%if[ie 6] (abc))
+
+(a (:href http://google.com) "test")
+(%goto[object] {object})
+(%link[.label] App.Label)
+
+(%internal (:action test) (abc) (def))
+(%internal[%test] (abc) (def))
+(%internal[test] (abc) (def))
