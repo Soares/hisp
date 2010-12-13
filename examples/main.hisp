@@ -64,4 +64,4 @@
 
 {%load media}
 (%addto[links] {%include_media "analyze.css"})
-(%addto {%include_media "analyze.js"})
+(%addto[scripts] {%include_media "analyze.js"})
