@@ -1,26 +1,21 @@
-from hisp.exceptions import ParseError
+from .exceptions import ParseError
 import re
 
-class Node:
+# Base Class #######################################################{{{1
+# All evaluatable objects should extend this
+
+class Node(object):
     def eval(self, hisp):
         return u''
 
-# Atoms :::1
+# Atoms #############################################################}}}{{{1
+# Elements that can be trivially rendered turing tokenization
+# They have to handle the escaping of escaped characters
+# Comments, Constants
 
 class Atom(Node):
-    render = u'%s'
+    PATTERN, ESCAPE = u'%s', ''
 
-    def __init__(self, value):
-        self.value = value
-
-    def __repr__(self):
-        return u'%s (%s)' % (self.__class__.__name__, self.value)
-
-    def eval(self, hisp):
-        return unicode(self.render) % self.value
-
-
-class Literal(Atom):
     @classmethod
     def escape(cls, value, char):
         search = re.compile(r'((?<!\\)(?:\\\\)*)(\\%s)' % char)
@@ -31,66 +26,86 @@ class Literal(Atom):
         return value.replace(r'\\', '\\')
 
     @classmethod
-    def render(cls, value, special):
-        return cls.deslash(reduce(cls.escape, special, value))
+    def render(cls, value, escape=''):
+        return cls.deslash(reduce(cls.escape, escape, value))
+
+    def __init__(self, value):
+        self.value = value
+        self.rendered = self.PATTERN % self.render(self.value, self.ESCAPE)
 
     def __repr__(self):
-        return u"'%s'" % self.value
+        return self.rendered
+
+    def __unicode__(self):
+        return unicode(self.rendered)
 
     def eval(self, hisp):
-        return self.render(self.value, "'")
+        return self.rendered
 
-
-class String(Literal):
-    variable = re.compile(r'\{((?:[^}\\]|\\.)*)\}')
-
-    def __repr__(self):
-        return u'"%s"' % self.value
-
-    def eval(self, hisp):
-        return self.render(self.variable.sub(r'{{\1}}', self.value), '"{')
-
-
-class CData(Literal):
-    def __repr__(self):
-        return "<%s>" % self.value
-
-    def eval(self, hisp):
-        return '<[CDATA[%s]]>' % self.render(self.value, '>')
-
+# Comments ##########################################################}}}{{{2
+# HTML Commets, Django Comments, and Hisp comments
 
 class HtmlComment(Atom):
-    render = u'<!--%s-->'
+    PATTERN, ESCAPE = u'<!--%s-->', ')'
 
 
 class DjangoComment(Atom):
-    render = u'{#%s#}'
+    PATTERN, ESCAPE = u'{#%s#}', '}'
 
 
 class Variable(Atom):
-    render = u'{{%s}}'
+    PATTERN, ESCAPE = u'{{%s}}', '}'
+
+# Constants #########################################################}}}{{{2
+# Atoms that handle escaping characters
+# Strings, Literal Strings, CDATA
+
+class Literal(Atom):
+    ESCAPE = "'"
+
+    def __repr__(self):
+        return "'%s'" % self.value
 
 
-class Doctype(Atom):
+class String(Atom):
+    ESCAPE = '"{'
+    variable = re.compile(r'\{((?:[^}\\]|\\.)*)\}')
+
+    def expand(self, match):
+        return '{{%s}}' % unicode(Variable(match.group(1)))
+
+    def __init__(self, value):
+        value = self.variable.sub(self.expand, value)
+        return super(String, self).__init__(value)
+
+    def __repr__(self):
+        return '"%s"' % self.value
+
+
+class CData(Atom):
+    PATTERN, ESCAPE = '<[CDATA[%s]]>', '>'
+
+    def __repr__(self):
+        return "<%s>" % self.value
+
+# Statements ########################################################}}}{{{1
+# Doctype, Element, Block, Macro
+
+class Doctype(Node):
     def __init__(self, value):
         self.value = value.strip().lower()
 
     def eval(self, hisp):
-        from hisp.doctypes import DOCTYPES, FILETYPES
-        import re
+        from .doctypes import DOCTYPES, FILETYPES
         consider = FILETYPES[hisp.filetype]
         for filetype in consider:
             for (regex, doctype) in DOCTYPES[filetype].items():
-                regex = r'^%s$' % regex
-                if re.match(regex, self.value):
+                if regex.match(self.value):
                     if filetype in FILETYPES:
                         hisp.setf(filetype)
-                    return re.sub(regex, doctype, self.value)
+                    return regex.sub(doctype, self.value)
         raise ParseError(u'Unrecognized Doctype: "%s"' % self.value)
 
-
-
-# Statements :::1
 
 class Elem(Node):
     DEFAULT = u'div'
@@ -122,27 +137,20 @@ class Elem(Node):
         self.children = children
 
     def __repr__(self):
-        return (self.tag or '') + (self.attrs.clsids() if self.attrs else '')
+        return self.tag or '[no tag]'
 
     def eval(self, hisp):
         return self.render(hisp, self.tag, self.attrs, self.children)
 
 
 class Macro(Node):
-    def __init__(self, name, lineno):
+    def __init__(self, name, arg, lineno):
         self.name = name.upper()
-        self.lineno = lineno
-        self.args, self.kwargs, self.attrs = None, None, None
-        self.children = []
+        self.arg, self.lineno = arg, lineno
+        self.children, self.attrs = [], None
 
     def set_css_attrs(self, attrs):
         self.attrs = attrs
-
-    def set_args(self, args):
-        self.args = args
-
-    def set_kwargs(self, attrs):
-        self.kwargs = attrs
 
     def set_attrs(self, attrs):
         self.attrs.update(attrs)
@@ -151,29 +159,32 @@ class Macro(Node):
         self.children = list(children)
 
     def __repr__(self):
-        return u'Macro(%s)' % self.name
+        return '(%%%s...)' % self.name
 
     def eval(self, hisp):
-        from hisp.macros import BoundMacro
-        from hisp.exceptions import MacroNotFound
+        from .exceptions import MacroNotFound
         try:
             macro = hisp.macro(self.name)
         except KeyError:
-            raise MacroNotFound(u"Can not find macro '%s' on line %d" % (self.name, self.lineno))
-        return BoundMacro(self, hisp, macro).rendered
+            raise MacroNotFound(u"Can not find macro '%s' on line %d" % (
+                self.name, self.lineno))
+        try:
+            return macro(hisp, self.name, self.arg, self.attrs, self.children)
+        except Exception as e:
+            raise MacroNotFound('Error rendering macro %s: %s' % (self.name, e))
 
 
 class Block(Node):
     def __init__(self, head, lineno):
         self.name = head.strip().split()[0]
-        self.head = Literal.render(head, "~}")
+        self.head = Atom.render(head, '~}"')
         self.children = None
 
     def set_children(self, children):
         self.children = children
 
     def __repr__(self):
-        return u'Block(%s)' % self.name
+        return u'{%%%s...%%}' % self.name
 
     def eval(self, hisp):
         if self.children is None:
@@ -181,70 +192,29 @@ class Block(Node):
         body = hisp.join(self.children)
         return u'{%%%s%%}%s{%%end%s%%}' % (self.head, body, self.name)
 
-
-# Items :::1
-
-class Attribute:
-    def __init__(self, name):
-        self.name = name
-
-    def set_value(self, value):
-        self.value = value
-
-    def __repr__(self):
-        return u'Attr(%s)' % self.name
-
-
-class Value(Node):
-    def __init__(self):
-        self.text = []
-
-    def __repr__(self):
-        return ''.join(map(repr, self.text))
-
-    def __len__(self):
-        return len(self.text)
-
-    def add(self, text):
-        self.text.insert(0, text)
-
-    def eval(self, hisp):
-        return hisp.join(self.text)
-
-# Item Sets :::1
+# SubExpressions ####################################################}}}{{{1
+# Attributes, Body
 
 class Attributes(Node, dict):
-    def add(self, *args):
-        if len(args) not in (1, 2):
-            raise TypeError('Attributes.add must be given either an attribute or a (name, value) pair')
-        if len(args) is 1:
-            attribute, = args
-            attr, val = attribute.name, attribute.value
-        else:
-            attr, val = args
-        self.setdefault(attr, set()).add(val)
+    def add(self, name, value):
+        self.setdefault(name, []).append(value)
 
     def merge(self, key, values):
-        self.setdefault(key, set()).update(values)
+        self.setdefault(key, []).extend(values)
 
     def update(self, other):
         for (key, values) in other.items():
             self.merge(key, values)
 
-    def clsids(self):
-        result = u''
-        for (key, value) in self.items():
-            if key == u'class':
-                result += '.%s' % repr(value)
-            if key == u'id':
-                result += '#%s' % repr(value)
-        return result
-
     def eval(self, hisp):
+        # We must create the attrs as a list first, because any errors
+        # created during generation would be incorrectly caught and
+        # re-raised as a generator error.
         attrs = [u'%s="%s"' % (name, hisp.separate(*values))
             if any(values) else hisp.flag(name)
             for (name, values) in self.items()]
         return hisp.separate(*attrs)
+
 
 class Body:
     def __init__(self):
@@ -255,7 +225,26 @@ class Body:
         self.children.insert(0, child)
 
     def add_attr(self, attr):
-        self.attrs.add(attr)
+        self.attrs.add(*attr)
 
     def __repr__(self):
         return u'Body'
+
+# Object Groups #####################################################}}}{{{1
+# Value (for Attribute)
+
+class Value(Node):
+    def __init__(self):
+        self.text = []
+
+    def __repr__(self):
+        return u''.join(map(repr, self.text))
+
+    def __len__(self):
+        return len(self.text)
+
+    def add(self, text):
+        self.text.insert(0, text)
+
+    def eval(self, hisp):
+        return hisp.join(self.text)

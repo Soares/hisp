@@ -31,7 +31,8 @@ class HispError(Exception):
             for arg in self.args:
                 print >> f, self.indent(str(arg)).rstrip()
         except Exception as e:
-            print 'DOUBLE EXCEPTION! WE HAVE TO GO DEEPER.'
+            print >> f, 'An exception within an exception....'
+            print >> f, 'WE HAVE TO GO DEEPER'
             print >> f, e
         return f.getvalue()
 

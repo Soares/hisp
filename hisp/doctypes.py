@@ -1,7 +1,12 @@
 HTML, XHTML, XML, DJANGO = 'HTML', 'XHTML', 'XML', 'DJANGO'
+import re
+
+def compile(filetype_dict):
+    return dict((re.compile('^%s$' % k), v) for (k, v) in filetype_dict.items())
+
 
 DOCTYPES = {
-    HTML: {
+    HTML: compile({
         r'(html)?\s*(5?)': '<!DOCTYPE HTML>',
 
         r'(html)?\s*4\s*(t(ransitional)?)?': '<!DOCTYPE html PUBLIC '
@@ -20,8 +25,8 @@ DOCTYPES = {
             '"-//IETF//DTD HTML//EN">',
 
         r'h(tml)? silent': '',
-    },
-    XHTML: {
+    }),
+    XHTML: compile({
         r'x(html)?\s*5': '<!DOCTYPE HTML>',
         r'x(html)?\s*(t(ransitional)?)?': '<!DOCTYPE html PUBLIC '
             '"-//W3C//DTD XHTML 1.0 Transitional//EN" '
@@ -47,14 +52,15 @@ DOCTYPES = {
             '"http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">',
 
         r'x(html)? silent': '',
-    },
-    XML: {
+    }),
+    XML: compile({
         r'xml': '<?xml version="1.0" encoding="utf-8" ?>',
         r'xml\s+(\S+)': r'<?xml version="1.0" encoding="\1" ?>',
-    },
-    DJANGO: {
-        r'(html4|html4trans|xhtml1|xhtml1trans|html5)( silent|)': r'{% doctype \1\2 %}',
-    },
+    }),
+    DJANGO: compile({
+        r'(html4|html4trans|xhtml1|xhtml1trans|html5)( silent|)':
+            r'{% doctype \1\2 %}',
+    }),
 }
 
 FILETYPES = {
