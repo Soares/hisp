@@ -50,7 +50,7 @@ class Tokenizer:
     @token(r"""
     \{!                 (?# Bracket Bang)
     ([^!\\]|\\.|![^}])* (?# Anything but unescaped brackets or slashes)
-    \!}                 (?# Closing Bang Bracket)""")
+    !\}                 (?# Closing Bang Bracket)""")
     def t_ignore_COMMENT(self, t):
         pass
 
@@ -60,7 +60,7 @@ class Tokenizer:
     @token(r"""
     \{\#                    (?# Bracket Hash)
     ([^#\\]|\\.|\#[^}])*    (?# Anything but unescaped brackets or slashes)
-    \\#}                    (?# Closing Bracket)""")
+    \#\}                    (?# Closing Bracket)""")
     def t_DJANGO_COMMENT(self, t):
         t.value = nodes.DjangoComment(t.value[2:-2])
         return t
@@ -71,7 +71,7 @@ class Tokenizer:
     @token(r"""
     \(!                 (?# Paren Bang)
     ([^!\\]|\\.|![^}])* (?# Anything but unescaped parens or slashes)
-    \!)                 (?# Closing Paren)""")
+    \!\)                (?# Closing Paren)""")
     def t_HTML_COMMENT(self, t):
         t.value = nodes.HtmlComment(t.value[2:-2])
         return t
@@ -91,12 +91,12 @@ class Tokenizer:
 
 
     # CLOSING ELEMENT: Statement Head
-    @token(r'\(/\s*[\w-]*')
     @token(r"""     (?# Nameless elements are allowed, as in #id.class)
-    \(/\s*          (?# Open Paren frontslash, whitespace)
-    [\w-]*          (?# Maybe a tag name, hyphens allowed)""")
+    \(\s*           (?# Open Paren frontslash, whitespace)
+    [\w:-]*         (?# Maybe a tag name, hyphens and colins allowed)
+    /               (?# A frontslash)""")
     def t_CLOSER(self, t):
-        t.value = nodes.Elem(t.value[2:], t.lexer.lineno)
+        t.value = nodes.Elem(t.value[1:-1], t.lexer.lineno)
         return t
 
 

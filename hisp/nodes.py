@@ -46,15 +46,15 @@ class Atom(Node):
 # HTML Commets, Django Comments, and Hisp comments
 
 class HtmlComment(Atom):
-    PATTERN, ESCAPE = u'<!--%s-->', ')'
+    PATTERN, ESCAPE = u'<!--%s-->', [r'\)']
 
 
 class DjangoComment(Atom):
-    PATTERN, ESCAPE = u'{#%s#}', '}'
+    PATTERN, ESCAPE = u'{#%s#}', [r'\}']
 
 
 class Variable(Atom):
-    PATTERN, ESCAPE = u'{{%s}}', '}'
+    PATTERN, ESCAPE = u'{{%s}}', [r'\}']
 
 # Constants #########################################################}}}{{{2
 # Atoms that handle escaping characters
@@ -181,7 +181,7 @@ class Block(Node):
 
     def __init__(self, head, lineno):
         self.name = head.strip().split()[0]
-        self.head = Atom.render(head, '~}"')
+        self.head = Atom.render(head, ('~', r'\}'))
         self.children = None
 
     def set_children(self, children):
