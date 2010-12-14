@@ -8,7 +8,8 @@ if exists("b:did_indent")
 endif
 let b:did_indent = 1
 
-setlocal autoindent nosmartindent sw=2 tabstop=2 et
+setlocal autoindent nosmartindent
+setlocal sts=2 sw=2 tabstop=2 et
 setlocal indentexpr=GetHispIndent(v:lnum)
 setlocal indentkeys=o,O
 
@@ -17,7 +18,7 @@ if exists("*GetHispIndent")
   finish
 endif
 
-function! HispDelta(lnum)
+function! s:delta(lnum)
     let line = getline(a:lnum)
     let len = strlen(line)
     let delta=0
@@ -40,6 +41,6 @@ endfunction
 function! GitHispIndent(lnum)
     if a:lnum == 0 | return 0 | endif
     let indent = indent(prev)
-    let delta = HispDelta(prevnonblack(a:lnum))
+    let delta = s:delta(prevnonblack(a:lnum))
     return indent + delta * &sw
 endfunction
