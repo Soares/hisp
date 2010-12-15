@@ -83,7 +83,7 @@ class Tokenizer:
     # DOCTYPE: Contained Statement
     @token(r"""
     \(~             (?# Paren Tilda)
-    ([^)\\]|\\.)    (?# Anything but unescaped parens or slashes)
+    ([^)\\]|\\.)*   (?# Anything but unescaped parens or slashes)
     \)              (?# Closing Paren)""")
     def t_DOCTYPE(self, t):
         t.value = nodes.Doctype(t.value[2:-1])
@@ -265,7 +265,7 @@ class Tokenizer:
     # word"<>"word will be parsed as WORD, STRING, WORD which will
     # be rendered as word<>word, so you can use strings like a
     # poor man's escape characters
-    @token(r"""[^\s"'<>)}]+""")
+    @token(r"""[^\s"'<>(){}][^\s"'>)}]*""")
     def t_WORD(self, t):
         return t
 
